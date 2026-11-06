@@ -15,30 +15,14 @@ class MealService {
         return meals
     }
 
-    // Get todays Meals:
-    public async getTodaysMeals(): Promise<IMealModel[]> {
-
-        const meals = await MealModel.find({
-            $expr: {
-                $eq: [
-                    { $dateTrunc: { date: "$createdAt", unit: "day", timezone: "Asia/Jerusalem" } },
-                    { $dateTrunc: { date: "$$NOW", unit: "day", timezone: "Asia/Jerusalem" } }
-                ]
-            }
-        });
-
-        return meals;
-
-    }
 
     // Get one
     public async getOneMeal(id: string): Promise<IMealModel> {
 
-        if (!mongoose.isValidObjectId(id)) throw new ClientError(StatusCode.UnprocessableContent, `ID: ${id}, is invalid.`)
+        if (!mongoose.isValidObjectId(id)) throw new ClientError(StatusCode.UnprocessableContent, `ID: ${id}, is invalid.`);
 
         const meal = await MealModel.findById(id).exec();
         if (!meal) throw new ClientError(StatusCode.NotFound, `ID: ${id}, not found.`);
-
         return meal;
 
     }
@@ -83,17 +67,6 @@ class MealService {
         return dbMeal!;
 
     }
-
-
-
-
-
-
-
-
-
-
-
 
 }
 

@@ -4,7 +4,7 @@ import { MealModel } from "../models/meal-model";
 import { StatusCode } from "../utils/error-handeling/enums";
 
 // Contains routes, without logic.
-class DataController {
+class MealController {
 
     // Create a router object which can listen on routes:
     public router: Router = express.Router();
@@ -12,7 +12,6 @@ class DataController {
     // Constructor - register routes:
     public constructor() {
         this.router.get("/api/meals", this.getAllMeals);
-        this.router.get("/api/meals/today", this.getTodaysMeals);
         this.router.post("/api/meals", this.addMeal);
         this.router.get("/api/meals/:id", this.getOneMeal);
         this.router.delete("/api/meals/:id", this.deleteMeal);
@@ -57,12 +56,9 @@ class DataController {
         respose.status(StatusCode.NoContent).json();
     }
 
-    private async getTodaysMeals(request: Request, response: Response): Promise<void> {
-        const meals = await mealService.getTodaysMeals();
-        response.json(meals);
-    }
+
 
 
 }
 
-export const dataController = new DataController();
+export const mealController = new MealController();
