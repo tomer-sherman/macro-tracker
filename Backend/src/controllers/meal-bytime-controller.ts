@@ -3,20 +3,21 @@ import { mealbytimeService } from "../services/meal-bytime-service";
 
 class MealByTimeController {
 
-
     public router: Router = express.Router();
 
     public constructor() {
         this.router.get("/api/meals-by-date-range", this.getMealsByRange)
     }
 
+    // GET /api/meals-by-date-range?timeZone=Asia/Jerusalem&startDate=2026-11-01&endDate=2026-11-07&order=desc
     private async getMealsByRange(request: Request, response: Response): Promise<void> {
 
-        // TODO make everything in the request params!!!
-        const timeZone: string = request.body.timeZone;
-        const startDate: string = request.body.startDate;
-        const endDate: string | undefined = request.body.endDate;
-        const order: string | undefined = request.body.order;
+        const { timeZone, startDate, endDate, order } = request.query as {
+            timeZone: string;
+            startDate: string;
+            endDate?: string;
+            order?: string;
+        };
 
         const meals = await mealbytimeService.getMealsByDateRange(timeZone, startDate, endDate, order);
         response.json(meals);

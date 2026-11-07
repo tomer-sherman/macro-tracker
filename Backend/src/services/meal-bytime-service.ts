@@ -42,18 +42,16 @@ class MealByTimeService {
         if (!IANAZone.create(timezone).isValid) throw new ClientError(StatusCode.UnprocessableContent, "Invalid timezone, check the check the list of valid time zones.");
 
         const zone = IANAZone.create(timezone);
+        const luxonStart = DateTime.fromISO(startDate, { zone }).startOf("day");
 
-        if (!endDate) {
-            const luxonStart = DateTime.fromISO(startDate, { zone }).startOf("day");
-            const end = luxonStart.plus({ days: 1 }).toJSDate();
-            const start = luxonStart.toJSDate();
-            return { start, end };
-        } else {
-            const start = DateTime.fromISO(startDate, { zone }).startOf("day").toJSDate()
-            const end = DateTime.fromISO(endDate, { zone }).startOf("day").plus({ days: 1 }).toJSDate();
-            return { start, end }
+        const end = endDate ?
+            DateTime.fromISO(endDate, { zone }).startOf("day").toJSDate() :
+            luxonStart.plus({ days: 1 }).toJSDate();
+
+        return {
+            start: luxonStart.toJSDate(),
+            end
         }
-
     }
 
 }
