@@ -1,8 +1,6 @@
 import cors from "cors";
 import express from "express";
 import expressFileUpload from "express-fileupload";
-import path from "path";
-import { saver } from "smart-saver";
 import { mealController } from "./controllers/meal-log-controller";
 import { errorMiddleware } from "./middleware/error-middleware";
 import { appConfig } from "./utils/app-config";
