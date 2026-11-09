@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import { mealbytimeService } from "../services/meal-bytime-service";
 
+
 type RequestQueries = {
     timeZone: string;
     startDate: string;
@@ -13,7 +14,7 @@ class MealByTimeController {
     public router: Router = express.Router();
 
     public constructor() {
-        this.router.get("/api/meals-by-date-range", this.getMealsByRange)
+        this.router.get("/api/meals-by-date-range", this.getMealsByRange);
     }
 
     // GET /api/meals-by-date-range?timeZone=Asia/Jerusalem&startDate=2026-11-01&endDate=2026-11-07&order=desc

@@ -2,12 +2,12 @@
 import { hash, verify } from "argon2";
 import { appConfig } from "../app-config";
 import { jwtVerify, SignJWT } from "jose";
+import { IUserModel } from "../../models/user-model";
 
-export type TokenPayload = {
-    userId: string;
-    role: "User" | "Admin";
-};
-
+type UserPayload = {
+    userId: string,
+    username: string
+}
 
 class Security {
 
@@ -23,7 +23,12 @@ class Security {
         return isValid
     }
 
-    public getNewToken(payload: TokenPayload): Promise<string> {
+    public async getNewToken(user: IUserModel): Promise<string> {
+        const payload: UserPayload = {
+            userId: user._id.toString(),
+            username: user.username
+        }
+
         const jwt = new SignJWT(payload)
             .setProtectedHeader({ alg: "HS256" })
             .setIssuedAt()
@@ -33,10 +38,14 @@ class Security {
         return jwt;
     }
 
-    public async verifyToken(token: string): Promise<TokenPayload> {
-        const { payload } = await jwtVerify<TokenPayload>(token, this.jwtSecret);
-
-        return payload;
+    public async verifyToken(token: string): Promise<boolean> {
+        try {
+            await jwtVerify<UserPayload>(token, this.jwtSecret);
+            return true
+        }
+        catch (err: any) {
+            return false
+        }
     }
 
 }

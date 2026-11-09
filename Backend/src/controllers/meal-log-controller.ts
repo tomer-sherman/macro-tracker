@@ -2,6 +2,7 @@ import express, { Request, Response, Router } from "express";
 import { mealService } from "../services/meal-service";
 import { MealModel } from "../models/meal-model";
 import { StatusCode } from "../utils/error-handeling/enums";
+import { authMiddleWare } from "../middleware/auth-middleware";
 
 // Contains routes, without logic.
 class MealController {
@@ -11,7 +12,7 @@ class MealController {
 
     // Constructor - register routes:
     public constructor() {
-        this.router.get("/api/meals", this.getAllMeals);
+        this.router.get("/api/meals" , this.getAllMeals);
         this.router.post("/api/meals", this.addMeal);
         this.router.get("/api/meals/:id", this.getOneMeal);
         this.router.delete("/api/meals/:id", this.deleteMeal);

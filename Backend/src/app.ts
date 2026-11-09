@@ -6,6 +6,9 @@ import { errorMiddleware } from "./middleware/error-middleware";
 import { appConfig } from "./utils/app-config";
 import mongoose from "mongoose";
 import { mealbytimeController } from "./controllers/meal-bytime-controller";
+import { authMiddleWare } from "./middleware/auth-middleware";
+import { loginController } from "./controllers/login-controller";
+import { loggerMiddleware } from "./middleware/logger-middleware";
 
 class App {
 
@@ -19,8 +22,15 @@ class App {
         // System middleware:
         server.use(cors()); // Enable CORS.
         server.use(express.json()); // Configure express to create request.body from a given JSON.
-        server.use(expressFileUpload()); // Configure express to create request.files from the request.
 
+        // Log requests
+        server.use(loggerMiddleware.logToConsole);
+
+        // The only route who doesnt need a logged in user.
+        server.use(loginController.router);
+
+        //Verify logged in:
+        server.use(authMiddleWare.verifyLoggedIn);
 
         // Register controllers:
         server.use(mealController.router);
