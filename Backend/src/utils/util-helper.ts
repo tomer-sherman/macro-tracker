@@ -15,24 +15,27 @@ class UtilHelper {
 
     public calculateWithMultiplayer(food: IFoodModel, userGrams: number): object {
         const mult = userGrams / 100;
+
         // Numeric fields that are identifiers, not nutrition values - never multiply these
         const excludedKeys = ["code", "foodGroup", "_id"];
 
-        // Turn the mongoose document into a plain obj, then into [key, value] pairs
-        const foodObj = Object.entries(food.toObject());
+        // Turn the obj into an arr then map it
+        const foodArr = Object.entries(food.toObject()).map(entry => {
 
-        // Build a new object: nutrition numbers get scaled, everything else is copied as-is
-        const multiedFood = Object.fromEntries(foodObj.map(([key, value]) => [
-            key,
-            typeof value === "number" && !excludedKeys.includes(key)
-                ? Math.round(value * mult * 100) / 100 // round to 2 decimals to avoid float noise
-                : value
-        ]));
+            // If the entry is not included in the arr of exludion, and the type is a number
+            if (typeof entry[1] === "number" && !excludedKeys.includes(entry[0])) {
 
-        // Set new grams property
-        multiedFood.grams = userGrams;
+                // Return the entry with a the numbered field multiplied
+                return [entry[0], Math.round(entry[1] as number * mult * 100) / 100];
 
-        return multiedFood;
+                // else return the entry as is
+            } else { return entry }
+        });
+
+        // NO IF I REMOVE THE IF FROM THE MAP, THEN THIS CRASHES
+        const foodObj = Object.fromEntries(foodArr);
+
+        return foodObj;
     }
 
     public sortBylang(query: string): object {
