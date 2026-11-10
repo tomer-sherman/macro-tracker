@@ -5,12 +5,14 @@ dotenv.config({ quiet: true });
 
 class AppConfig {
 
-   
+
     public readonly port = 4000;
     public readonly mongoConnection = process.env.MONGO_CONNECTION_STRING!;
 
+    public readonly openAiKey = process.env.OPENAI_API_KEY!;
+
     public readonly jwtSecret = process.env.JWT_SECRET!;
-   
+
 
 }
 

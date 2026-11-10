@@ -9,6 +9,7 @@ import { mealbytimeController } from "./controllers/meal-bytime-controller";
 import { authMiddleWare } from "./middleware/auth-middleware";
 import { loginController } from "./controllers/login-controller";
 import { loggerMiddleware } from "./middleware/logger-middleware";
+import { foodDataController } from "./controllers/food-data-controller";
 
 class App {
 
@@ -30,11 +31,12 @@ class App {
         server.use(loginController.router);
 
         //Verify logged in:
-        server.use(authMiddleWare.verifyLoggedIn);
+        //server.use(authMiddleWare.verifyLoggedIn);
 
         // Register controllers:
         server.use(mealController.router);
         server.use(mealbytimeController.router);
+        server.use(foodDataController.router);
 
         // Register "after" middleware:
         server.use(errorMiddleware.routeNotFound);

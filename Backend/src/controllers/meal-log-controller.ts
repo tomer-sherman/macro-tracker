@@ -1,6 +1,6 @@
 import express, { Request, Response, Router } from "express";
 import { mealService } from "../services/meal-service";
-import { MealModel } from "../models/meal-model";
+import { MealModel } from "../models/meal-log-model";
 import { StatusCode } from "../utils/error-handeling/enums";
 import { authMiddleWare } from "../middleware/auth-middleware";
 
@@ -12,7 +12,7 @@ class MealController {
 
     // Constructor - register routes:
     public constructor() {
-        this.router.get("/api/meals" , this.getAllMeals);
+        this.router.get("/api/meals", this.getAllMeals);
         this.router.post("/api/meals", this.addMeal);
         this.router.get("/api/meals/:id", this.getOneMeal);
         this.router.delete("/api/meals/:id", this.deleteMeal);
@@ -28,7 +28,6 @@ class MealController {
     private async getOneMeal(request: Request, response: Response): Promise<void> {
 
         const id = request.params.id as string;
-
         const meal = await mealService.getOneMeal(id);
         response.json(meal);
     }
@@ -36,9 +35,8 @@ class MealController {
     private async addMeal(request: Request, respose: Response): Promise<void> {
 
         const meal = new MealModel(request.body);
-
         const dbMeal = await mealService.addMeal(meal);
-        respose.status(StatusCode.Created).json(dbMeal)
+        respose.status(StatusCode.Created).json(dbMeal);
     }
 
     private async updateMeal(request: Request, respose: Response): Promise<void> {

@@ -1,6 +1,6 @@
 
 import { ClientError } from "../utils/error-handeling/client-error";
-import { IMealModel, MealModel } from "../models/meal-model";
+import { IMealModel, MealModel } from "../models/meal-log-model";
 import { StatusCode } from "../utils/error-handeling/enums";
 import mongoose, { Types } from "mongoose";
 

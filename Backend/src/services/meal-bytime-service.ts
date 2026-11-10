@@ -1,5 +1,5 @@
 import { DateTime, IANAZone } from "luxon";
-import { IMealModel, MealModel } from "../models/meal-model";
+import { IMealModel, MealModel } from "../models/meal-log-model";
 import { ClientError } from "../utils/error-handeling/client-error";
 import { StatusCode } from "../utils/error-handeling/enums";
 

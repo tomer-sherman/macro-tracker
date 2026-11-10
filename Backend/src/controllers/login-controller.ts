@@ -26,13 +26,11 @@ class LoginController {
 }
 
 async function login(creds: CredentialModel): Promise<string> {
+    
 
-    console.log("Entered login!!!!")
     // Find user
     const userArr = await UserModel.find({ username: creds.username }).exec() as IUserModel[];
-    console.log(userArr);
     if (userArr.length === 0) throw new ClientError(StatusCode.BadRequest, "Username or password incorrect.")
-    console.log(userArr);
     const user = userArr[0];
 
     // Extract hash from user
