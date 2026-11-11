@@ -1,15 +1,29 @@
 import { IFoodModel } from "../models/food-model";
 
-export type aiEstimateResponse = {
-    matchId: string;
-    grams: number;
+export type descMatch = {
+    matches: string[];
 }
+
+type ExtractedFood = {
+    food: string;
+    grams: number;
+};
+
+export type aiExtraction = {
+    items: ExtractedFood[];
+};
 
 class UtilHelper {
 
     public parseCompletion(completion: string) {
         const string = completion.substring(completion.indexOf("{"), completion.lastIndexOf("}") + 1);
-        const json: aiEstimateResponse = JSON.parse(string);
+        const json: descMatch = JSON.parse(string);
+        return json
+    }
+    // TO DO MAKE THIS PARSING MORE GENERAL!!!!!!!!
+    public parseCompletion2(completion: string) {
+        const string = completion.substring(completion.indexOf("{"), completion.lastIndexOf("}") + 1);
+        const json: aiExtraction = JSON.parse(string);
         return json
     }
 
@@ -34,6 +48,7 @@ class UtilHelper {
 
         // NO IF I REMOVE THE IF FROM THE MAP, THEN THIS CRASHES
         const foodObj = Object.fromEntries(foodArr);
+        foodObj.grams = userGrams;
 
         return foodObj;
     }

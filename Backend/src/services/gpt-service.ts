@@ -7,15 +7,15 @@ class GptService {
         apiKey: appConfig.openAiKey
     })
 
-    public async getCompletion(userPrompt: string, data: string, systemPrompt: string): Promise<string> {
+    public async getCompletion(userPrompt: string, systemPrompt: string, data?: string): Promise<string> {
 
         const response = await this.openai.responses.create({
             model: "gpt-4o-mini",
-            instructions: systemPrompt + ` \n data: ${data}`,
+            instructions: systemPrompt + " " + data,
             input: userPrompt
         })
 
-        
+
 
         const completion = response.output_text;
 
