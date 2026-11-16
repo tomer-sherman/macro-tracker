@@ -5,6 +5,7 @@ import { dateUtil } from "../../../utils/date-util";
 import { mealUtil } from "../../../utils/meal-util";
 import { notify } from "../../../utils/notify";
 import { ConfirmModal } from "../../shared-area/confirm-modal/confirm-modal";
+import { MacroChip, MacroTone } from "../../shared-area/macro-chip/macro-chip";
 import "./meal-card.css";
 
 type MealCardProps = {
@@ -17,13 +18,13 @@ export function MealCard({ meal, readOnly = false }: MealCardProps) {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const stats = [
-        { label: "Calories", value: meal.calories, unit: "kcal" },
-        { label: "Protein", value: meal.protien, unit: "g" },
-        { label: "Carbs", value: meal.carbs, unit: "g" },
-        { label: "Fat", value: meal.fats, unit: "g" },
-        { label: "Fiber", value: meal.fiber, unit: "g" },
-        { label: "Sugars", value: meal.sugars, unit: "g" }
+    const stats: { label: string; value: number | null; unit: string; tone: MacroTone }[] = [
+        { label: "Calories", value: meal.calories, unit: "kcal", tone: "calories" },
+        { label: "Protein", value: meal.protien, unit: "g", tone: "protein" },
+        { label: "Carbs", value: meal.carbs, unit: "g", tone: "carbs" },
+        { label: "Fat", value: meal.fats, unit: "g", tone: "fat" },
+        { label: "Fiber", value: meal.fiber, unit: "g", tone: "neutral" },
+        { label: "Sugars", value: meal.sugars, unit: "g", tone: "neutral" }
     ];
 
     async function deleteMeal(): Promise<void> {
@@ -47,7 +48,7 @@ export function MealCard({ meal, readOnly = false }: MealCardProps) {
 
             <div className="meal-top">
                 <div>
-                    <span className="desc">{meal.desc}</span>
+                    <span className="desc" dir="auto">{meal.desc}</span>
                     <span className="grams">{mealUtil.format(meal.grams)} g</span>
                 </div>
                 <div className="meal-actions">
@@ -57,7 +58,7 @@ export function MealCard({ meal, readOnly = false }: MealCardProps) {
                     {!readOnly && (
                         <button
                             type="button"
-                            className="btn-delete"
+                            className="btn-ghost btn-delete"
                             aria-label={`Remove ${meal.desc}`}
                             onClick={() => setIsConfirmOpen(true)}
                             disabled={isDeleting}
@@ -79,7 +80,7 @@ export function MealCard({ meal, readOnly = false }: MealCardProps) {
                 onCancel={() => setIsConfirmOpen(false)}
             >
                 <p>
-                    <strong className="modal-meal-name">{meal.desc}</strong>
+                    <strong className="modal-meal-name" dir="auto">{meal.desc}</strong>
                     {" "}({mealUtil.format(meal.grams)} g{meal.createdAt && `, logged at ${dateUtil.toTime(meal.createdAt)}`})
                 </p>
                 <p>It will be removed from your logs. This can't be undone.</p>
@@ -87,13 +88,7 @@ export function MealCard({ meal, readOnly = false }: MealCardProps) {
 
             <dl className="stats">
                 {stats.map(stat => (
-                    <div key={stat.label}>
-                        <dt>{stat.label}</dt>
-                        <dd>
-                            {mealUtil.format(stat.value)}
-                            {stat.value !== null && stat.value !== undefined && <span className="unit"> {stat.unit}</span>}
-                        </dd>
-                    </div>
+                    <MacroChip key={stat.label} label={stat.label} value={stat.value} unit={stat.unit} tone={stat.tone} />
                 ))}
             </dl>
 

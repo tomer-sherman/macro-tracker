@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { AppState } from "../../../redux/store";
 import { History } from "../../pages-area/history/history";
 import { Page404 } from "../../pages-area/page404/page404";
+import { Stats } from "../../pages-area/stats/stats";
 import { TodaysLogs } from "../../pages-area/todays-logs/todays-logs";
 import { Login } from "../../user-area/login/login";
 
@@ -24,6 +25,9 @@ export function Routing() {
 
             {/* History (past days' logs) - only for a logged-in user: */}
             <Route path="/history" element={user ? <History /> : <Navigate to="/login" replace />} />
+
+            {/* Stats (averages + charts over a chosen range) - only for a logged-in user: */}
+            <Route path="/stats" element={user ? <Stats /> : <Navigate to="/login" replace />} />
 
             {/* Page not found: */}
             <Route path="*" element={<Page404 />} />

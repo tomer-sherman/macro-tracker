@@ -1,11 +1,12 @@
 import "./spinner.css";
-import loading from "../../../assets/loading.gif";
 
+// Small indeterminate loader, for a wait with no content shape to preview (lists use Skeleton instead):
 export function Spinner() {
     return (
-        <div className="Spinner">
+        <div className="Spinner" role="status">
 
-			<img src={loading} alt="Loading..." />
+            <span className="spinner-ring" aria-hidden="true" />
+            <span className="visually-hidden">Loading...</span>
 
         </div>
     );

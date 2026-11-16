@@ -1,0 +1,220 @@
+/*
+ * MacroTracker design tokens - the ONE place every visual value lives.
+ * Component styles reference these variables only; no raw colors / sizes / durations elsewhere.
+ * design.md documents every token here - change a value -> update design.md in the same change.
+ */
+
+:root {
+    color-scheme: dark;
+
+    /* ---------- Color: base ---------- */
+    --color-bg: #050912;
+    --color-surface: #0a1222;
+    --color-surface-raised: #101b30;
+    --color-surface-sunken: #060b16;
+    --color-grid-line: rgba(110, 200, 255, 0.045);
+    --color-border: rgba(80, 220, 255, 0.14);
+    --color-border-strong: rgba(80, 220, 255, 0.3);
+    --color-divider: rgba(140, 180, 230, 0.1);
+    --color-bracket: rgba(80, 220, 255, 0.55);
+    --color-backdrop: rgba(2, 5, 12, 0.72);
+    --color-skeleton: #111c31;
+    --color-skeleton-shine: #1a2945;
+    --color-shadow: rgba(0, 0, 0, 0.7);
+    --color-highlight: rgba(255, 255, 255, 0.03);
+
+    /* ---------- Color: text ---------- */
+    --color-text: #e4eefc;
+    --color-text-muted: #8da2c0;
+    --color-text-faint: #64789a; /* Disabled / decorative only - below 4.5:1, never for readable text. */
+
+    /* ---------- Color: primary accent (interactive + primary) ---------- */
+    --color-accent: #21d4fd;
+    --color-accent-hover: #67e3ff;
+    --color-accent-press: #12b5dc;
+    --color-on-accent: #02111a;
+
+    /* ---------- Color: macro signals (fixed - a macro keeps its color everywhere) ---------- */
+    --color-calories: var(--color-accent);
+    --color-protein: #a78bff;
+    --color-carbs: #ffb627;
+    --color-fat: #ff5ccd;
+    --color-neutral-signal: var(--color-text-muted); /* Fiber, sugars and any non-macro stat. */
+
+    /* ---------- Color: status ---------- */
+    --color-danger: #ff5f57;
+    --color-danger-hover: #ff7f78;
+    --color-on-danger: #1a0303;
+    --color-success: #3ee09a;
+
+    /* ---------- Color: derived tints (soft = fills, line = borders, glow = glow color) ---------- */
+    --color-accent-soft: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    --color-accent-line: color-mix(in srgb, var(--color-accent) 45%, transparent);
+    --color-accent-glow: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    --color-calories-soft: color-mix(in srgb, var(--color-calories) 12%, transparent);
+    --color-calories-line: color-mix(in srgb, var(--color-calories) 45%, transparent);
+    --color-calories-glow: color-mix(in srgb, var(--color-calories) 50%, transparent);
+    --color-protein-soft: color-mix(in srgb, var(--color-protein) 12%, transparent);
+    --color-protein-line: color-mix(in srgb, var(--color-protein) 45%, transparent);
+    --color-protein-glow: color-mix(in srgb, var(--color-protein) 50%, transparent);
+    --color-carbs-soft: color-mix(in srgb, var(--color-carbs) 12%, transparent);
+    --color-carbs-line: color-mix(in srgb, var(--color-carbs) 45%, transparent);
+    --color-carbs-glow: color-mix(in srgb, var(--color-carbs) 50%, transparent);
+    --color-fat-soft: color-mix(in srgb, var(--color-fat) 12%, transparent);
+    --color-fat-line: color-mix(in srgb, var(--color-fat) 45%, transparent);
+    --color-fat-glow: color-mix(in srgb, var(--color-fat) 50%, transparent);
+    --color-neutral-soft: color-mix(in srgb, var(--color-neutral-signal) 10%, transparent);
+    --color-neutral-line: color-mix(in srgb, var(--color-neutral-signal) 30%, transparent);
+    --color-neutral-glow: transparent;
+    --color-danger-soft: color-mix(in srgb, var(--color-danger) 12%, transparent);
+    --color-danger-line: color-mix(in srgb, var(--color-danger) 45%, transparent);
+    --color-danger-glow: color-mix(in srgb, var(--color-danger) 50%, transparent);
+    --color-success-soft: color-mix(in srgb, var(--color-success) 12%, transparent);
+    --color-success-line: color-mix(in srgb, var(--color-success) 45%, transparent);
+    --color-success-glow: color-mix(in srgb, var(--color-success) 50%, transparent);
+
+    /* ---------- Typography: families ---------- */
+    --font-display: "Chakra Petch", "IBM Plex Sans Hebrew", "IBM Plex Sans", system-ui, sans-serif;
+    --font-body: "IBM Plex Sans", "IBM Plex Sans Hebrew", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+    /* ---------- Typography: scale ---------- */
+    --text-2xs: 0.6875rem;  /* 11px - uppercase labels, units */
+    --text-xs: 0.75rem;     /* 12px - captions, chips */
+    --text-sm: 0.875rem;    /* 14px - secondary text */
+    --text-md: 1rem;        /* 16px - body, inputs (never smaller on inputs: iOS zooms) */
+    --text-lg: 1.125rem;    /* 18px - brand, card titles */
+    --text-xl: 1.375rem;    /* 22px - section readouts */
+    --text-2xl: clamp(1.5rem, 1.2rem + 1.5vw, 2rem);      /* page titles, 24 -> 32px */
+    --text-3xl: clamp(1.75rem, 1.4rem + 1.6vw, 2.25rem);  /* gauge readout, 28 -> 36px */
+    --text-4xl: clamp(3rem, 2.2rem + 4vw, 4.5rem);        /* 404 code, 48 -> 72px */
+
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+
+    --leading-none: 1;
+    --leading-tight: 1.15;
+    --leading-snug: 1.3;
+    --leading-normal: 1.5;
+
+    --tracking-normal: 0;
+    --tracking-display: 0.04em;
+    --tracking-button: 0.08em;
+    --tracking-label: 0.12em;
+    --underline-offset: 0.2em;
+
+    /* ---------- Spacing (4px grid) ---------- */
+    --space-0: 0;
+    --space-1: 0.25rem;  /* 4px */
+    --space-2: 0.5rem;   /* 8px */
+    --space-3: 0.75rem;  /* 12px */
+    --space-4: 1rem;     /* 16px */
+    --space-5: 1.25rem;  /* 20px */
+    --space-6: 1.5rem;   /* 24px */
+    --space-8: 2rem;     /* 32px */
+    --space-10: 2.5rem;  /* 40px */
+    --space-12: 3rem;    /* 48px */
+    --space-16: 4rem;    /* 64px */
+
+    /* ---------- Radii (HUD = tight corners) ---------- */
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-md: 6px;
+    --radius-lg: 10px;
+    --radius-full: 999px;
+
+    /* ---------- Borders ---------- */
+    --border-width: 1px;
+    --border-width-strong: 2px;
+    --bracket-size: 10px;
+    --bracket-width: 2px;
+
+    /* ---------- Shadows + glows (glow = signal only: progress, active, focus, primary action) ---------- */
+    --glow-blur-sm: 6px;
+    --glow-blur-md: 14px;
+    --glow-blur-lg: 28px;
+    --shadow-panel: inset 0 1px 0 var(--color-highlight);
+    --shadow-overlay: 0 24px 48px -12px var(--color-shadow);
+    --shadow-glow-accent: 0 0 0 var(--border-width) var(--color-accent-line), 0 0 var(--glow-blur-md) var(--color-accent-glow);
+    --shadow-glow-danger: 0 0 0 var(--border-width) var(--color-danger-line), 0 0 var(--glow-blur-md) var(--color-danger-glow);
+    --focus-ring-width: 2px;
+    --focus-ring-offset: 2px;
+    --blur-backdrop: 4px;
+
+    /* ---------- Opacity ---------- */
+    --opacity-disabled: 0.45;
+    --opacity-off: 0.18; /* Unlit gauge segments / empty bar cells. */
+    --opacity-busy: 0.55; /* Old content held on screen while new content loads. */
+
+    /* ---------- Z-index ---------- */
+    --z-base: 0;
+    --z-raised: 1;
+    --z-dropdown: 10;
+    --z-header: 20;
+    --z-toast: 99999; /* iziToast's own wrapper value. Native <dialog> uses the top layer and needs none. */
+
+    /* ---------- Motion ---------- */
+    --duration-fast: 150ms;
+    --duration-base: 200ms;
+    --duration-slow: 300ms;
+    --duration-shimmer: 1400ms; /* Loading shimmer / scan line - loops only while content is loading. */
+    --duration-spin: 900ms;     /* Spinner turn - loops only while loading. */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --scale-enter: 0.98;        /* Start scale of an entering modal. */
+    --stagger-step: 3ms; /* Gauge segments light up one after another (48 x 3ms = 144ms). */
+
+    /* ---------- Layout ---------- */
+    --container-max: 1100px;
+    --container-narrow: 400px;
+    --modal-width: 420px;
+    --gutter: var(--space-4);
+    --grid-size: 24px;
+    --touch-target: 44px;
+    --header-height: 56px;
+    --dropdown-max-height: 280px;
+    --field-min: 7rem; /* Narrowest number field before the grid drops a column. */
+    --col-calendar: 380px;
+    /* Breakpoints - reference only: CSS can't read variables in @media / @container,
+       so queries repeat these literal values. Change one -> search the CSS for the old value. */
+    --bp-sm: 600px;               /* @media - one-row header, roomier panels */
+    --bp-md: 860px;               /* @media - two-column pages */
+    --cq-item-narrow: 340px;      /* @container meal-item - live macro chips go 2 per line below this */
+    --cq-list-split: 460px;       /* @container meal-list - gauge and macro bars side by side */
+    --cq-list-wide: 640px;        /* @container meal-list - log row chips in one line of 6 */
+
+    /* ---------- Component sizes ---------- */
+    --brand-mark-size: 10px;
+    --gauge-size: clamp(168px, 46vw, 208px);
+    --gauge-ring-width: 9px;
+    --gauge-tick-width: 1px;
+    --macro-bar-height: 8px;
+    --macro-bar-cell: 6px; /* Width of one bar cell (segment + gap). */
+    --macro-bar-gap: 2px;
+    --slider-track-height: 6px;
+    --slider-thumb-size: 22px;
+    --chip-dot-size: 6px;
+    --status-icon-size: 22px;
+    --spinner-size: 32px;
+    --skeleton-line-height: 12px;
+    --skeleton-block-height: 56px;
+
+    /* ---------- Charts ---------- */
+    --chart-height: 240px;          /* Whole chart incl. the x-axis label band. */
+    --chart-line-width: 2px;
+    --chart-area-opacity: 0.1;      /* Wash under a single-series line. */
+    --chart-key-width: 14px;        /* Line-key in legends / tooltips. */
+    --chart-tooltip-min: 168px;
+    --stat-tile-min: 9rem;          /* Narrowest KPI tile before the row drops a column. */
+}
+
+/* Reduced motion: every duration token drops to zero, so all token-driven transitions become instant. */
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --duration-fast: 0ms;
+        --duration-base: 0ms;
+        --duration-slow: 0ms;
+        --stagger-step: 0ms;
+    }
+}

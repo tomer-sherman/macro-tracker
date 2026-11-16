@@ -1,18 +1,14 @@
-:root {
-    --bg: #f5f7f6;
-    --surface: #ffffff;
-    --border: #dfe4e2;
-    --text: #1d2523;
-    --text-muted: #66716d;
-    --accent: #1f8a5b;
-    --accent-hover: #18724a;
-    --accent-soft: #e5f3ec;
-    --danger: #c0392b;
-    --radius: 10px;
-    --content-width: 1100px;
+@import "./styles/tokens.css";
+@import "./styles/fonts.css";
+@import "./styles/izitoast-theme.css";
 
-    color-scheme: light;
-}
+/*
+ * Global base + CSS primitives (Panel, Button, Input, Label, tone utilities).
+ * This file loads AFTER the component stylesheets, so element-level rules are wrapped in :where()
+ * (zero specificity) - any component rule always wins over them.
+ */
+
+/* ---------- Base ---------- */
 
 *,
 *::before,
@@ -20,105 +16,373 @@
     box-sizing: border-box;
 }
 
+/*
+ * Touch: hover styles live under @media (hover: hover) everywhere - on a phone a tapped element would keep
+ * its hover look until the next tap. Instead, a tap flashes the soft accent wash (not the browser's gray box):
+ */
+html {
+    scrollbar-color: var(--color-border-strong) transparent;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: var(--color-accent-soft);
+}
+
 body {
     margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
+    background-color: var(--color-bg);
+    /* Instrument-panel grid: */
+    background-image:
+        linear-gradient(var(--color-grid-line) var(--border-width), transparent var(--border-width)),
+        linear-gradient(90deg, var(--color-grid-line) var(--border-width), transparent var(--border-width));
+    background-size: var(--grid-size) var(--grid-size);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-    color: var(--accent);
+::selection {
+    background: var(--color-accent-line);
+    color: var(--color-text);
 }
 
-/* Cards */
+:where(h1, h2, h3, h4) {
+    font-family: var(--font-display);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-tight);
+}
+
+:where(a) {
+    color: var(--color-accent);
+    text-underline-offset: var(--underline-offset);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+    :where(a:hover) {
+        color: var(--color-accent-hover);
+    }
+}
+
+/* Every number (times, grams, kcal) - mono + tabular, so digits never jump: */
+:where(time, .num) {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard focus - always visible, always the accent ring + glow: */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: var(--focus-ring-width) solid var(--color-accent);
+    outline-offset: var(--focus-ring-offset);
+    box-shadow: 0 0 var(--glow-blur-md) var(--color-accent-glow);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Panel (.card) ---------- */
+
 .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
+    position: relative;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-panel);
+    padding: var(--space-4);
 }
 
-/* Form controls */
-label {
+/* Corner brackets - top-left and bottom-right: */
+.card::before,
+.card::after {
+    content: "";
+    position: absolute;
+    width: var(--bracket-size);
+    height: var(--bracket-size);
+    border: 0 solid var(--color-bracket);
+    pointer-events: none;
+}
+
+.card::before {
+    top: calc(-1 * var(--border-width));
+    left: calc(-1 * var(--border-width));
+    border-top-width: var(--bracket-width);
+    border-left-width: var(--bracket-width);
+    border-top-left-radius: var(--radius-sm);
+}
+
+.card::after {
+    bottom: calc(-1 * var(--border-width));
+    right: calc(-1 * var(--border-width));
+    border-bottom-width: var(--bracket-width);
+    border-right-width: var(--bracket-width);
+    border-bottom-right-radius: var(--radius-sm);
+}
+
+@media (min-width: 600px) {
+    .card {
+        padding: var(--space-6);
+    }
+}
+
+/* ---------- Labels ---------- */
+
+/* Small uppercase letter-spaced label, e.g. "PROTEIN · G": */
+:where(label),
+.label {
     display: block;
-    font-weight: 600;
-    font-size: 0.9rem;
-    margin-bottom: 6px;
+    margin-bottom: var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--leading-snug);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
 }
 
-input,
-textarea {
+/* ---------- Inputs ---------- */
+
+:where(input:not([type="range"], [type="checkbox"], [type="radio"]), textarea, select) {
     width: 100%;
-    font: inherit;
-    color: var(--text);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 12px;
+    min-height: var(--touch-target);
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-body);
+    font-size: var(--text-md);
+    line-height: var(--leading-snug);
+    color: var(--color-text);
+    background: var(--color-surface-sunken);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    transition:
+        border-color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
 }
 
-input:focus,
-textarea:focus {
-    outline: 2px solid var(--accent);
-    outline-offset: -1px;
-    border-color: var(--accent);
+:where(input[type="number"]) {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
 }
 
-input[aria-invalid="true"],
-textarea[aria-invalid="true"] {
-    border-color: var(--danger);
+:where(input, textarea)::placeholder {
+    color: var(--color-text-muted);
+    opacity: 1;
+}
+
+@media (hover: hover) {
+    :where(input:not([type="range"]), textarea, select):hover:not(:disabled, :focus) {
+        border-color: var(--color-accent-line);
+    }
+}
+
+:where(input:not([type="range"]), textarea, select):focus {
+    outline: var(--focus-ring-width) solid var(--color-accent);
+    outline-offset: calc(-1 * var(--border-width));
+    border-color: var(--color-accent);
+    box-shadow: 0 0 var(--glow-blur-md) var(--color-accent-glow);
+}
+
+:where(input, textarea, select)[aria-invalid="true"] {
+    border-color: var(--color-danger);
+}
+
+:where(input, textarea, select)[aria-invalid="true"]:focus {
+    outline-color: var(--color-danger);
+    box-shadow: 0 0 var(--glow-blur-md) var(--color-danger-glow);
+}
+
+:where(input, textarea, select):disabled {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
 }
 
 .field-error {
-    display: block;
-    margin-top: 4px;
-    color: var(--danger);
-    font-size: 0.85rem;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+    color: var(--color-danger);
+    font-size: var(--text-xs);
+    line-height: var(--leading-snug);
 }
 
-/* Buttons */
-button {
+/* A small status square before the message (decorative - the text carries the meaning): */
+.field-error::before {
+    content: "";
+    flex-shrink: 0;
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    background: currentColor;
+}
+
+/* ---------- Buttons ---------- */
+
+:where(button) {
     font: inherit;
+    color: inherit;
     cursor: pointer;
-    border-radius: 8px;
-    padding: 9px 16px;
-    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    border: var(--border-width) solid transparent;
+    background: none;
+    padding: var(--space-2) var(--space-4);
+    min-height: var(--touch-target);
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
 }
 
-button:disabled {
+:where(button):disabled {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--opacity-disabled);
 }
 
-.btn-primary {
-    background: var(--accent);
-    color: #fff;
-    font-weight: 600;
-}
-
-.btn-primary:hover:not(:disabled) {
-    background: var(--accent-hover);
-}
-
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
 .btn-danger {
-    background: var(--danger);
-    color: #fff;
-    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--touch-target);
+    padding: var(--space-2) var(--space-5);
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-button);
+    line-height: var(--leading-none);
+    text-transform: uppercase;
+    text-decoration: none; /* The classes also style <a>/<Link> as buttons. */
+    white-space: nowrap;
+    cursor: pointer;
 }
 
-.btn-danger:hover:not(:disabled) {
-    background: #a5311f;
+/* Primary - the one main action of a view. Glows: */
+.btn-primary {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    box-shadow: 0 0 var(--glow-blur-sm) var(--color-accent-glow);
 }
 
+@media (hover: hover) {
+    .btn-primary:where(:hover:not(:disabled)) {
+        background: var(--color-accent-hover);
+        box-shadow: var(--shadow-glow-accent);
+    }
+}
+
+.btn-primary:where(:active:not(:disabled)) {
+    background: var(--color-accent-press);
+}
+
+/* Secondary - supporting actions. Outlined, flat: */
 .btn-secondary {
-    background: var(--surface);
-    color: var(--text);
-    border-color: var(--border);
+    background: transparent;
+    color: var(--color-accent);
+    border-color: var(--color-accent-line);
 }
 
-.btn-secondary:hover:not(:disabled) {
-    background: var(--accent-soft);
+@media (hover: hover) {
+    .btn-secondary:where(:hover:not(:disabled)) {
+        background: var(--color-accent-soft);
+        border-color: var(--color-accent);
+    }
+}
+
+/* Ghost - low-emphasis / inline actions. No border at rest: */
+.btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+    padding-inline: var(--space-3);
+}
+
+@media (hover: hover) {
+    .btn-ghost:where(:hover:not(:disabled)) {
+        background: var(--color-surface-raised);
+        color: var(--color-text);
+    }
+}
+
+/* Danger - destructive confirm. Glows like a primary: */
+.btn-danger {
+    background: var(--color-danger);
+    color: var(--color-on-danger);
+    box-shadow: 0 0 var(--glow-blur-sm) var(--color-danger-glow);
+}
+
+@media (hover: hover) {
+    .btn-danger:where(:hover:not(:disabled)) {
+        background: var(--color-danger-hover);
+        box-shadow: var(--shadow-glow-danger);
+    }
+}
+
+/* Disabled buttons never glow: */
+:where(.btn-primary, .btn-secondary, .btn-ghost, .btn-danger):disabled {
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* ---------- Tone utilities - one per macro signal (set on a primitive's root) ---------- */
+
+.tone-calories {
+    --tone: var(--color-calories);
+    --tone-soft: var(--color-calories-soft);
+    --tone-line: var(--color-calories-line);
+    --tone-glow: var(--color-calories-glow);
+}
+
+.tone-protein {
+    --tone: var(--color-protein);
+    --tone-soft: var(--color-protein-soft);
+    --tone-line: var(--color-protein-line);
+    --tone-glow: var(--color-protein-glow);
+}
+
+.tone-carbs {
+    --tone: var(--color-carbs);
+    --tone-soft: var(--color-carbs-soft);
+    --tone-line: var(--color-carbs-line);
+    --tone-glow: var(--color-carbs-glow);
+}
+
+.tone-fat {
+    --tone: var(--color-fat);
+    --tone-soft: var(--color-fat-soft);
+    --tone-line: var(--color-fat-line);
+    --tone-glow: var(--color-fat-glow);
+}
+
+.tone-neutral {
+    --tone: var(--color-neutral-signal);
+    --tone-soft: var(--color-neutral-soft);
+    --tone-line: var(--color-neutral-line);
+    --tone-glow: var(--color-neutral-glow);
+}
+
+/* ---------- Reduced motion ---------- */
+
+/* Durations are zeroed in tokens.css; this also stops keyframe animations (shimmer, iziToast): */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+    }
 }

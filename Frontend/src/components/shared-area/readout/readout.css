@@ -1,0 +1,38 @@
+.Readout {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    white-space: nowrap;
+}
+
+.Readout .readout-value {
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-none);
+    color: var(--color-text);
+}
+
+.Readout .readout-unit {
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.Readout.size-sm .readout-value {
+    font-size: var(--text-sm);
+}
+
+.Readout.size-md .readout-value {
+    font-size: var(--text-md);
+}
+
+.Readout.size-lg .readout-value {
+    font-size: var(--text-xl);
+}
+
+.Readout.size-xl .readout-value {
+    font-size: var(--text-3xl);
+    font-weight: var(--weight-semibold);
+}

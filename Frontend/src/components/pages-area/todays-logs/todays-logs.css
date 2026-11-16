@@ -2,27 +2,34 @@
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: var(--space-1) var(--space-4);
+    margin-bottom: var(--space-6);
 }
 
 .TodaysLogs .page-title h2 {
     margin: 0;
+    font-size: var(--text-2xl);
+    text-transform: uppercase;
 }
 
 .TodaysLogs .page-title .date {
-    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
 }
 
 .TodaysLogs .sections {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: 20px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
     align-items: start;
 }
 
-@media (max-width: 860px) {
+@media (min-width: 860px) {
     .TodaysLogs .sections {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+        gap: var(--space-6);
     }
 }

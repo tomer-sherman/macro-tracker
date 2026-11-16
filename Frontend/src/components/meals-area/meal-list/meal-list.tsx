@@ -1,5 +1,7 @@
 import { MealModel } from "../../../models/meal-model";
-import { Spinner } from "../../shared-area/spinner/spinner";
+import { Skeleton } from "../../shared-area/skeleton/skeleton";
+import { StatusPanel } from "../../shared-area/status-panel/status-panel";
+import { DailySummary } from "../daily-summary/daily-summary";
 import { MealCard } from "../meal-card/meal-card";
 import "./meal-list.css";
 
@@ -24,25 +26,23 @@ export function MealList({ title, meals, isLoading, loadFailed, emptyText, faile
                 {!isLoading && !loadFailed && <span className="count">{meals.length}</span>}
             </div>
 
-            {isLoading && <Spinner />}
+            {isLoading && <Skeleton label="Loading meals..." />}
 
             {!isLoading && loadFailed && meals.length === 0 && (
-                <div className="empty">
-                    <p>{failedText}</p>
+                <StatusPanel kind="failed" text={failedText}>
                     {onRetry && <button type="button" className="btn-secondary" onClick={onRetry}>Try again</button>}
-                </div>
+                </StatusPanel>
             )}
 
-            {!isLoading && !loadFailed && meals.length === 0 && (
-                <div className="empty">
-                    <p>{emptyText}</p>
-                </div>
-            )}
+            {!isLoading && !loadFailed && meals.length === 0 && <StatusPanel kind="empty" text={emptyText} />}
 
             {!isLoading && meals.length > 0 && (
-                <ul>
-                    {meals.map(meal => <MealCard key={meal._id} meal={meal} readOnly={readOnly} />)}
-                </ul>
+                <>
+                    <DailySummary meals={meals} />
+                    <ul>
+                        {meals.map(meal => <MealCard key={meal._id} meal={meal} readOnly={readOnly} />)}
+                    </ul>
+                </>
             )}
 
         </section>

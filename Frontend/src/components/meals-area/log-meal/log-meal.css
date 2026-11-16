@@ -1,11 +1,25 @@
+/* Section title with an accent tick: */
 .LogMeal h3 {
-    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-5);
+    font-size: var(--text-md);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.LogMeal h3::before {
+    content: "";
+    width: var(--space-3);
+    height: var(--border-width-strong);
+    background: var(--color-accent);
 }
 
 .LogMeal .ai-form {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
 }
 
 .LogMeal .ai-form label {
@@ -18,15 +32,18 @@
 
 .LogMeal .ai-form button {
     align-self: flex-start;
+    margin-top: var(--space-1);
 }
 
+/* "Check the details below..." between two hairlines: */
 .LogMeal .divider {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin: 22px 0 16px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    gap: var(--space-3);
+    margin: var(--space-6) 0 var(--space-5);
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: var(--leading-snug);
     text-align: center;
 }
 
@@ -34,11 +51,13 @@
 .LogMeal .divider::after {
     content: "";
     flex: 1;
-    border-top: 1px solid var(--border);
+    min-width: var(--space-4);
+    border-top: var(--border-width) solid var(--color-divider);
 }
 
 .LogMeal .actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
-    gap: 12px;
+    gap: var(--space-3);
 }

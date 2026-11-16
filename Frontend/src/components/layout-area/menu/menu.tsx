@@ -7,6 +7,7 @@ export function Menu() {
 
             <NavLink to="/todays-logs">Today's logs</NavLink>
             <NavLink to="/history">History</NavLink>
+            <NavLink to="/stats">Stats</NavLink>
 
         </nav>
     );

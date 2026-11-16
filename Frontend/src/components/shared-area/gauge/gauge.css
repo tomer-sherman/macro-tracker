@@ -1,0 +1,94 @@
+.Gauge {
+    position: relative;
+    width: var(--gauge-size);
+    aspect-ratio: 1;
+    flex-shrink: 0;
+}
+
+.Gauge svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Ticks + inner ring - flat scale marks, never glow: */
+.Gauge .gauge-ticks line {
+    stroke: var(--color-border-strong);
+    stroke-width: var(--gauge-tick-width);
+}
+
+.Gauge .gauge-ticks line.major {
+    stroke: var(--color-text-faint);
+}
+
+.Gauge .gauge-inner-ring {
+    fill: none;
+    stroke: var(--color-divider);
+    stroke-width: var(--gauge-tick-width);
+}
+
+/* Segments - unlit ones stay dim; lit ones light up one after another: */
+.Gauge .gauge-seg {
+    fill: none;
+    stroke: var(--tone);
+    stroke-width: var(--gauge-ring-width);
+    opacity: var(--opacity-off);
+    transition:
+        opacity var(--duration-fast) var(--ease-out) calc(var(--i) * var(--stagger-step)),
+        stroke var(--duration-slow) var(--ease-out);
+}
+
+.Gauge .gauge-seg[data-lit="true"] {
+    opacity: 1;
+}
+
+/* Glow layer = progress signal: a blurred copy of the lit segments only */
+.Gauge .gauge-glow {
+    filter: blur(var(--glow-blur-sm));
+}
+
+.Gauge .gauge-glow .gauge-seg {
+    opacity: 0;
+}
+
+.Gauge .gauge-glow .gauge-seg[data-lit="true"] {
+    opacity: 1;
+}
+
+/* Center readout */
+.Gauge .gauge-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    text-align: center;
+}
+
+.Gauge .gauge-unit,
+.Gauge .gauge-label {
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    line-height: var(--leading-none);
+    text-transform: uppercase;
+}
+
+.Gauge .gauge-unit {
+    color: var(--color-calories);
+}
+
+.Gauge .gauge-unit .num {
+    letter-spacing: var(--tracking-normal);
+}
+
+.Gauge .gauge-label {
+    margin-top: var(--space-1);
+    padding-top: var(--space-1);
+    border-top: var(--border-width) solid var(--color-divider);
+    color: var(--color-text-muted);
+}

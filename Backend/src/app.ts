@@ -31,7 +31,7 @@ class App {
         server.use(loginController.router);
 
         //Verify logged in:
-        //server.use(authMiddleWare.verifyLoggedIn);
+        server.use(authMiddleWare.verifyLoggedIn);
 
         // Register controllers:
         server.use(mealController.router);

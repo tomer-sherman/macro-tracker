@@ -1,8 +1,8 @@
 .Calendar {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    max-width: 380px;
+    gap: var(--space-2);
+    max-width: var(--col-calendar);
     margin: 0 auto;
 }
 
@@ -10,120 +10,186 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    margin-bottom: 4px;
+    gap: var(--space-2);
 }
 
 .Calendar .calendar-header h3 {
     margin: 0;
-    font-size: 1.05rem;
+    font-size: var(--text-md);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
 }
 
 .Calendar .nav-btn {
-    width: 36px;
-    height: 36px;
+    width: var(--touch-target);
+    height: var(--touch-target);
     padding: 0;
-    background: none;
-    color: var(--text);
-    border-color: var(--border);
-    font-size: 1.3rem;
-    line-height: 1;
+    color: var(--color-text);
+    border-color: var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+    line-height: var(--leading-none);
 }
 
-.Calendar .nav-btn:hover:not(:disabled) {
-    background: var(--accent-soft);
+@media (hover: hover) {
+    .Calendar .nav-btn:hover:not(:disabled) {
+        background: var(--color-accent-soft);
+        border-color: var(--color-accent-line);
+        color: var(--color-accent);
+    }
 }
 
+/* No gap - every cell is a full touch target; the visible "chip" is drawn inset by ::before */
 .Calendar .weekdays,
 .Calendar .days {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 4px;
 }
 
 .Calendar .weekdays span {
+    padding-block: var(--space-1);
     text-align: center;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-muted);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
+.Calendar .days {
+    position: relative;
+}
+
 .Calendar .day {
     position: relative;
+    isolation: isolate;
     aspect-ratio: 1;
+    min-height: var(--touch-target);
     padding: 0;
-    background: none;
-    color: var(--text);
+    border: none;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
     font-variant-numeric: tabular-nums;
 }
 
-.Calendar .day:hover:not(:disabled) {
-    background: var(--accent-soft);
+.Calendar .day::before {
+    content: "";
+    position: absolute;
+    inset: var(--space-1);
+    z-index: -1;
+    border: var(--border-width) solid transparent;
+    border-radius: var(--radius-sm);
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        border-color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
 }
 
-.Calendar .day:focus-visible,
-.Calendar .nav-btn:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
+@media (hover: hover) {
+    .Calendar .day:hover:not(:disabled, .selected)::before {
+        background: var(--color-surface-raised);
+        border-color: var(--color-border-strong);
+    }
+}
+
+.Calendar .day:focus-visible {
+    outline-offset: calc(-1 * var(--focus-ring-width));
 }
 
 .Calendar .day.today {
-    border-color: var(--accent);
-    color: var(--accent);
-    font-weight: 700;
+    color: var(--color-accent);
+    font-weight: var(--weight-semibold);
 }
 
-.Calendar .day.selected,
-.Calendar .day.selected:hover:not(:disabled) {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-    font-weight: 700;
+.Calendar .day.today::before {
+    border-color: var(--color-accent-line);
+}
+
+/* Selected = active state, so it glows (hover skips it, so it stays lit): */
+.Calendar .day.selected {
+    color: var(--color-on-accent);
+    font-weight: var(--weight-semibold);
+}
+
+.Calendar .day.selected::before {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 var(--glow-blur-md) var(--color-accent-glow);
 }
 
 /* Future days: */
 .Calendar .day:disabled {
-    opacity: 0.3;
+    opacity: 1;
+    color: var(--color-text-faint);
 }
 
 .Calendar .dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    background: var(--color-accent);
 }
 
 .Calendar .day .dot {
     position: absolute;
-    bottom: 5px;
+    bottom: var(--space-2);
     left: 50%;
     transform: translateX(-50%);
 }
 
 .Calendar .day.selected .dot {
-    background: #fff;
+    background: var(--color-on-accent);
+}
+
+/* Month still loading - a scan line runs across the top of the days: */
+.Calendar .days[aria-busy="true"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    height: var(--border-width-strong);
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    animation: calendar-scan var(--duration-shimmer) linear infinite;
 }
 
 .Calendar .calendar-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 8px;
-    margin-top: 4px;
+    gap: var(--space-2);
+    margin-top: var(--space-1);
+    padding-top: var(--space-2);
+    border-top: var(--border-width) solid var(--color-divider);
 }
 
 .Calendar .legend {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.85rem;
-    color: var(--text-muted);
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
 }
 
 .Calendar .today-btn {
-    padding: 5px 12px;
-    font-size: 0.85rem;
+    padding-inline: var(--space-4);
+    font-size: var(--text-xs);
+}
+
+@keyframes calendar-scan {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(333%);
+    }
 }

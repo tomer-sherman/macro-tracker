@@ -66,6 +66,7 @@ export function LogMeal() {
                 <textarea
                     id="prompt"
                     rows={3}
+                    dir="auto"
                     placeholder="e.g. 200 grams potato and 300 grams of beef"
                     aria-invalid={!!promptForm.formState.errors.prompt}
                     {...promptForm.register("prompt", {

@@ -1,0 +1,55 @@
+.Skeleton {
+    display: flex;
+    flex-direction: column;
+}
+
+.Skeleton .skeleton-row {
+    display: grid;
+    grid-template-columns: var(--space-12) minmax(0, 1fr);
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-4) 0;
+    border-top: var(--border-width) solid var(--color-divider);
+}
+
+.Skeleton .skeleton-row:first-of-type {
+    border-top: none;
+    padding-top: 0;
+}
+
+.Skeleton .skeleton-line,
+.Skeleton .skeleton-block {
+    display: block;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(
+        90deg,
+        var(--color-skeleton) 0%,
+        var(--color-skeleton-shine) 50%,
+        var(--color-skeleton) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer var(--duration-shimmer) linear infinite;
+}
+
+.Skeleton .skeleton-line {
+    height: var(--skeleton-line-height);
+}
+
+.Skeleton .skeleton-text {
+    width: 60%;
+}
+
+.Skeleton .skeleton-block {
+    grid-column: 1 / -1;
+    height: var(--skeleton-block-height);
+}
+
+/* Loops only while the content is loading - the element is gone once it arrives: */
+@keyframes skeleton-shimmer {
+    from {
+        background-position: 100% 0;
+    }
+
+    to {
+        background-position: -100% 0;
+    }
+}

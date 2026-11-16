@@ -1,0 +1,60 @@
+.SegmentedControl {
+    display: inline-flex;
+    margin: 0;
+    padding: var(--space-1);
+    min-width: 0;
+    background: var(--color-surface-sunken);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+}
+
+.SegmentedControl label {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+    margin: 0;
+    padding: 0 var(--space-3);
+    border-radius: var(--radius-xs);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-button);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* The radio stays in the page for keyboard + screen readers, invisible over its label: */
+.SegmentedControl input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    .SegmentedControl label:hover:not(.selected) {
+        background: var(--color-surface-raised);
+        color: var(--color-text);
+    }
+}
+
+/* Selected = active state, so it glows: */
+.SegmentedControl label.selected {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    box-shadow: 0 0 var(--glow-blur-sm) var(--color-accent-glow);
+}
+
+.SegmentedControl label:has(input:focus-visible) {
+    outline: var(--focus-ring-width) solid var(--color-accent);
+    outline-offset: var(--focus-ring-offset);
+}

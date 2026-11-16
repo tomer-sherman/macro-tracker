@@ -26,7 +26,6 @@ export function Header() {
 
             {user && (
                 <div className="user-box">
-                    <span>Hi, <strong>{user.username}</strong></span>
                     <button type="button" className="btn-secondary" onClick={logout}>Log out</button>
                 </div>
             )}

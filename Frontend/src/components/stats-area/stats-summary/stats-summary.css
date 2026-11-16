@@ -1,0 +1,42 @@
+.StatsSummary {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--stat-tile-min), 1fr));
+    gap: var(--space-3);
+    margin: 0;
+}
+
+.StatsSummary .stat-tile {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--radius-sm);
+}
+
+/* Label in a text color; the colored square beside it carries the macro's identity: */
+.StatsSummary dt {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.StatsSummary dt::before {
+    content: "";
+    flex-shrink: 0;
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    background: var(--tone);
+}
+
+.StatsSummary dd {
+    margin: 0;
+}

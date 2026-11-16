@@ -4,8 +4,13 @@
 <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Home-screen icon on iPhone (iOS ignores SVG icons there and rounds the corners itself): -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MacroTracker</title>
+    <!-- Browser chrome color = the --color-bg token (HTML can't read CSS variables): -->
+    <meta name="theme-color" content="#050912" />
+    <meta name="color-scheme" content="dark" />
+    <title>Macro Tracker</title>
 </head>
 
 <body>

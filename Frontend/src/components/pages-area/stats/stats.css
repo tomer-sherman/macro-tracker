@@ -1,0 +1,98 @@
+.Stats {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+.Stats .page-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+}
+
+.Stats .page-title h2 {
+    margin: 0;
+    font-size: var(--text-2xl);
+    text-transform: uppercase;
+}
+
+.Stats .page-title .period {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+/* Full-width segments on phones, content-sized from 600px: */
+.Stats .filters .SegmentedControl {
+    display: flex;
+    width: 100%;
+}
+
+.Stats .stats-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+    transition: opacity var(--duration-base) var(--ease-out);
+}
+
+/* The previous range stays on screen, dimmed, while the next one loads: */
+.Stats .stats-content[aria-busy="true"] {
+    opacity: var(--opacity-busy);
+}
+
+.Stats .section-label {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+.Stats .charts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+}
+
+/* Chart title with an accent tick, like the other section titles: */
+.Stats .chart-card h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: 0;
+    font-size: var(--text-md);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+}
+
+.Stats .chart-card h3::before {
+    content: "";
+    width: var(--space-3);
+    height: var(--border-width-strong);
+    background: var(--color-accent);
+}
+
+.Stats .chart-card .caption {
+    margin: var(--space-1) 0 var(--space-4);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+@media (min-width: 600px) {
+    .Stats .filters .SegmentedControl {
+        display: inline-flex;
+        width: auto;
+    }
+}
+
+@media (min-width: 860px) {
+    .Stats .charts {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-6);
+    }
+}

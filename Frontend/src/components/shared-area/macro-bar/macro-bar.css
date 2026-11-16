@@ -1,0 +1,78 @@
+.MacroBar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+.MacroBar .macro-bar-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2);
+}
+
+.MacroBar .macro-bar-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--tone);
+}
+
+/* Signal square before the label: */
+.MacroBar .macro-bar-label::before {
+    content: "";
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    background: var(--tone);
+}
+
+.MacroBar .macro-bar-readout {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+}
+
+.MacroBar .macro-bar-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
+}
+
+/* Track: a row of cells. Unlit cells = the tone, dimmed; the fill = lit cells that glow */
+.MacroBar .macro-bar-track {
+    position: relative;
+    height: var(--macro-bar-height);
+}
+
+.MacroBar .macro-bar-track::before,
+.MacroBar .macro-bar-fill {
+    background: repeating-linear-gradient(
+        90deg,
+        var(--tone) 0 calc(var(--macro-bar-cell) - var(--macro-bar-gap)),
+        transparent 0 var(--macro-bar-cell)
+    );
+}
+
+.MacroBar .macro-bar-track::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: var(--opacity-off);
+}
+
+.MacroBar .macro-bar-fill {
+    position: relative;
+    height: 100%;
+    width: calc(var(--fill) * 100%);
+    /* Snap to whole cells where supported (any value above 0 lights at least one): */
+    width: min(100%, round(up, calc(var(--fill) * 100%), var(--macro-bar-cell)));
+    filter: drop-shadow(0 0 var(--glow-blur-sm) var(--tone-glow));
+    transition: width var(--duration-slow) var(--ease-out);
+}

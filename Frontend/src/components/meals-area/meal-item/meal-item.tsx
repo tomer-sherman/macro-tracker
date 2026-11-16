@@ -5,6 +5,7 @@ import { MealsFormValues, MealStats } from "../../../models/meal-model";
 import { foodService } from "../../../services/food-service";
 import { mealUtil } from "../../../utils/meal-util";
 import { notify } from "../../../utils/notify";
+import { GramsSlider } from "../grams-slider/grams-slider";
 import "./meal-item.css";
 
 type NumberField = {
@@ -225,6 +226,7 @@ export function MealItem({ index, canRemove, onRemove, disabled }: MealItemProps
                     <input
                         id={descId}
                         type="text"
+                        dir="auto"
                         placeholder="Search a food in English, e.g. chicken breast"
                         autoComplete="off"
                         role="combobox"
@@ -251,6 +253,7 @@ export function MealItem({ index, canRemove, onRemove, disabled }: MealItemProps
                                     role="option"
                                     aria-selected={i === activeIndex}
                                     className={i === activeIndex ? "active" : undefined}
+                                    dir="auto"
                                     // Keep focus on the input, so its blur doesn't close the list before the click lands:
                                     onMouseDown={event => event.preventDefault()}
                                     onClick={() => pick(name)}
@@ -262,21 +265,23 @@ export function MealItem({ index, canRemove, onRemove, disabled }: MealItemProps
                     )}
 
                     {showStatus && (
-                        <p className="suggestions status">{isSearching ? "Searching..." : hint}</p>
+                        <p className="suggestions status" aria-busy={isSearching}>{isSearching ? "Searching..." : hint}</p>
                     )}
                 </div>
 
                 {rowErrors?.desc && <span className="field-error">{rowErrors.desc.message}</span>}
             </div>
 
+            <GramsSlider index={index} disabled={disabled} onWeightChange={rescale} />
+
             <div className="number-grid">
                 {numberFields.map(numberField => {
                     const id = `meal-${index}-${numberField.name}`;
                     const error = rowErrors?.[numberField.name];
                     return (
-                        <div className="field" key={numberField.name}>
+                        <div className="field" key={numberField.name} data-field={numberField.name}>
                             <label htmlFor={id}>
-                                {numberField.label} <span className="unit">({numberField.unit})</span>
+                                {numberField.label} <span className="unit">{numberField.unit}</span>
                                 {!numberField.required && <span className="optional">optional</span>}
                             </label>
                             <input

@@ -1,0 +1,36 @@
+.DailySummary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+    padding-bottom: var(--space-5);
+    border-bottom: var(--border-width) solid var(--color-divider);
+}
+
+.DailySummary .summary-bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    width: 100%;
+    min-width: 0;
+}
+
+.DailySummary .summary-caption {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+/* Room for gauge + bars side by side: */
+@container meal-list (min-width: 460px) {
+    .DailySummary {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-6);
+    }
+}

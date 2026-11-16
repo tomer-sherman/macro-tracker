@@ -1,0 +1,157 @@
+.RangeSlider {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.RangeSlider .range-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-3);
+}
+
+.RangeSlider .range-head label {
+    margin-bottom: 0;
+}
+
+.RangeSlider .range-value {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    color: var(--color-accent);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-none);
+}
+
+.RangeSlider .range-unit {
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+/* The input itself is the full touch target; the track + thumb are drawn inside it */
+.RangeSlider input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: var(--touch-target);
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.RangeSlider input[type="range"]:disabled {
+    cursor: not-allowed;
+    opacity: var(--opacity-disabled);
+}
+
+/* Focus ring goes on the thumb, not the whole box: */
+.RangeSlider input[type="range"]:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+/* ---- WebKit / Blink ---- */
+.RangeSlider input[type="range"]::-webkit-slider-runnable-track {
+    height: var(--slider-track-height);
+    border-radius: var(--radius-full);
+    background: linear-gradient(
+        90deg,
+        var(--color-accent) 0 var(--fill),
+        var(--color-surface-raised) var(--fill) 100%
+    );
+    box-shadow: 0 0 var(--glow-blur-sm) var(--color-accent-glow);
+}
+
+.RangeSlider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--slider-thumb-size);
+    height: var(--slider-thumb-size);
+    margin-top: calc((var(--slider-track-height) - var(--slider-thumb-size)) / 2);
+    border-radius: var(--radius-full);
+    background: var(--color-bg);
+    border: var(--border-width-strong) solid var(--color-accent);
+    box-shadow: 0 0 var(--glow-blur-md) var(--color-accent-glow);
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
+}
+
+/* Filled while dragged - on every device; on hover only where a real pointer hovers: */
+.RangeSlider input[type="range"]:active:not(:disabled)::-webkit-slider-thumb {
+    background: var(--color-accent);
+}
+
+@media (hover: hover) {
+    .RangeSlider input[type="range"]:hover:not(:disabled)::-webkit-slider-thumb {
+        background: var(--color-accent);
+    }
+}
+
+.RangeSlider input[type="range"]:focus-visible::-webkit-slider-thumb {
+    box-shadow:
+        0 0 0 var(--focus-ring-offset) var(--color-bg),
+        0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-accent),
+        0 0 var(--glow-blur-lg) var(--color-accent-glow);
+}
+
+.RangeSlider input[type="range"]:disabled::-webkit-slider-runnable-track,
+.RangeSlider input[type="range"]:disabled::-webkit-slider-thumb {
+    box-shadow: none;
+}
+
+/* ---- Firefox ---- */
+.RangeSlider input[type="range"]::-moz-range-track {
+    height: var(--slider-track-height);
+    border-radius: var(--radius-full);
+    background: var(--color-surface-raised);
+}
+
+.RangeSlider input[type="range"]::-moz-range-progress {
+    height: var(--slider-track-height);
+    border-radius: var(--radius-full);
+    background: var(--color-accent);
+    box-shadow: 0 0 var(--glow-blur-sm) var(--color-accent-glow);
+}
+
+.RangeSlider input[type="range"]::-moz-range-thumb {
+    width: var(--slider-thumb-size);
+    height: var(--slider-thumb-size);
+    border-radius: var(--radius-full);
+    background: var(--color-bg);
+    border: var(--border-width-strong) solid var(--color-accent);
+    box-shadow: 0 0 var(--glow-blur-md) var(--color-accent-glow);
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.RangeSlider input[type="range"]:active:not(:disabled)::-moz-range-thumb {
+    background: var(--color-accent);
+}
+
+@media (hover: hover) {
+    .RangeSlider input[type="range"]:hover:not(:disabled)::-moz-range-thumb {
+        background: var(--color-accent);
+    }
+}
+
+.RangeSlider input[type="range"]:focus-visible::-moz-range-thumb {
+    box-shadow:
+        0 0 0 var(--focus-ring-offset) var(--color-bg),
+        0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width)) var(--color-accent),
+        0 0 var(--glow-blur-lg) var(--color-accent-glow);
+}
+
+.RangeSlider input[type="range"]:disabled::-moz-range-progress,
+.RangeSlider input[type="range"]:disabled::-moz-range-thumb {
+    box-shadow: none;
+}

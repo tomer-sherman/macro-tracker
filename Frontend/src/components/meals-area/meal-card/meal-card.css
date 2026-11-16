@@ -1,19 +1,71 @@
+/*
+ * A mission-log row: [time] food name · grams        [remove]
+ *                    macro chips in each macro's color
+ */
 .MealCard {
     list-style: none;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+        "time desc remove"
+        "stats stats stats";
+    gap: var(--space-3);
+    align-items: start;
+    margin-inline: calc(-1 * var(--space-2));
+    padding: var(--space-4) var(--space-2);
+    border-top: var(--border-width) solid var(--color-divider);
+    border-radius: var(--radius-sm);
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        opacity var(--duration-base) var(--ease-out);
 }
 
-.MealCard .meal-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
+.MealCard:first-child {
+    border-top-color: transparent;
+}
+
+@media (hover: hover) {
+    .MealCard:hover {
+        background: var(--color-surface-raised);
+    }
+}
+
+/* While the remove request runs, the whole row dims: */
+.MealCard:has(.btn-delete:disabled) {
+    opacity: var(--opacity-disabled);
+}
+
+/* The markup groups these - let each one take its own grid cell: */
+.MealCard .meal-top,
+.MealCard .meal-actions {
+    display: contents;
+}
+
+.MealCard time {
+    grid-area: time;
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--text-xs);
+    line-height: var(--leading-none);
+    color: var(--color-text);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-xs);
+    transition: border-color var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+    .MealCard:hover time {
+        border-color: var(--color-accent-line);
+    }
+}
+
+.MealCard .meal-top > div:first-child {
+    grid-area: desc;
+    min-width: 0;
 }
 
 .MealCard .desc {
-    font-weight: 600;
+    font-weight: var(--weight-medium);
+    line-height: var(--leading-snug);
     overflow-wrap: anywhere;
 }
 
@@ -23,69 +75,58 @@
 }
 
 .MealCard .grams {
-    margin-left: 8px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    display: inline-block;
+    margin-inline-start: var(--space-2);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
     white-space: nowrap;
 }
 
-.MealCard .meal-actions {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
+/* Ghost button in the danger color; negative margins keep the 44px target without a taller row */
 .MealCard .btn-delete {
-    background: none;
-    color: var(--danger);
-    padding: 2px 6px;
-    font-size: 0.85rem;
+    grid-area: remove;
+    margin-block: calc(-1 * var(--space-3));
+    padding-inline: var(--space-2);
+    font-size: var(--text-2xs);
+    color: var(--color-danger);
 }
 
-.MealCard .btn-delete:hover:not(:disabled) {
-    text-decoration: underline;
+@media (hover: hover) {
+    .MealCard .btn-delete:hover:not(:disabled) {
+        background: var(--color-danger-soft);
+        color: var(--color-danger-hover);
+    }
 }
 
-.MealCard time {
-    background: var(--accent-soft);
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 0.85rem;
-    border-radius: 999px;
-    padding: 2px 10px;
+.MealCard .stats {
+    grid-area: stats;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+}
+
+/* Wide list (e.g. history on desktop): chips in one line, tucked under the name */
+@container meal-list (min-width: 640px) {
+    .MealCard {
+        grid-template-areas:
+            "time desc remove"
+            ". stats stats";
+    }
+
+    .MealCard .stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
 }
 
 /* Meal name inside the remove modal (rendered in a portal, so it's outside .MealCard): */
 .ConfirmModal .modal-meal-name {
     display: inline-block;
-    color: var(--text);
+    color: var(--color-text);
 }
 
 .ConfirmModal .modal-meal-name::first-letter {
     text-transform: uppercase;
-}
-
-.MealCard .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 8px;
-    margin: 12px 0 0;
-}
-
-.MealCard dt {
-    color: var(--text-muted);
-    font-size: 0.75rem;
-}
-
-.MealCard dd {
-    margin: 0;
-    font-weight: 600;
-    font-variant-numeric: tabular-nums;
-}
-
-.MealCard .unit {
-    font-weight: 400;
-    font-size: 0.8rem;
-    color: var(--text-muted);
 }

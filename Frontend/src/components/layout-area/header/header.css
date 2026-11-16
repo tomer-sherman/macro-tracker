@@ -1,29 +1,90 @@
+/*
+ * Mobile: brand + user on the first row, the menu as a full-width tab bar under them.
+ * From 600px: one row - brand, menu, user.
+ */
 .Header {
-    max-width: var(--content-width);
+    max-width: var(--container-max);
     margin: 0 auto;
-    padding: 14px 16px;
+    padding: 0 var(--gutter);
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 12px;
+    column-gap: var(--space-4);
 }
 
+/* Lets brand and menu be placed on their own (the markup groups them): */
 .Header .nav-side {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px 24px;
+    display: contents;
 }
 
 .Header .brand {
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--accent);
+    order: 1;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--header-height);
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-bold);
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--color-text);
     text-decoration: none;
 }
 
+/* Diamond mark - flat, it's branding, not a signal: */
+.Header .brand::before {
+    content: "";
+    width: var(--brand-mark-size);
+    height: var(--brand-mark-size);
+    border: var(--border-width-strong) solid var(--color-accent);
+    transform: rotate(45deg);
+}
+
+@media (hover: hover) {
+    .Header .brand:hover {
+        color: var(--color-accent);
+    }
+}
+
 .Header .user-box {
+    order: 2;
+    flex: 1 1 0;
+    min-width: 0;
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: flex-end;
+    gap: var(--space-3);
+}
+
+.Header .user-box .btn-secondary {
+    flex-shrink: 0;
+    padding-inline: var(--space-3);
+    font-size: var(--text-xs);
+}
+
+.Header .Menu {
+    order: 3;
+    flex-basis: 100%;
+}
+
+@media (min-width: 600px) {
+    .Header {
+        flex-wrap: nowrap;
+        column-gap: var(--space-8);
+    }
+
+    .Header .Menu {
+        order: 2;
+        flex-basis: auto;
+    }
+
+    .Header .user-box {
+        order: 3;
+    }
+
+    .Header .user-box .btn-secondary {
+        padding-inline: var(--space-4);
+    }
 }

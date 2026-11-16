@@ -1,0 +1,20 @@
+.GramsSlider {
+    padding: var(--space-3);
+    background: var(--color-surface-sunken);
+    border: var(--border-width) solid var(--color-divider);
+    border-radius: var(--radius-sm);
+}
+
+.GramsSlider .live-macros {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-2);
+    margin: 0;
+}
+
+/* Below ~340px of row width, two per line: */
+@container meal-item (max-width: 340px) {
+    .GramsSlider .live-macros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

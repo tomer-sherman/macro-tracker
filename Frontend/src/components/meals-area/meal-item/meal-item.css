@@ -1,104 +1,215 @@
 .MealItem {
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 14px;
+    container: meal-item / inline-size;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    padding: var(--space-4);
+    border: var(--border-width) solid var(--color-border);
+    border-left: var(--bracket-width) solid var(--color-accent-line);
+    border-radius: var(--radius-sm);
 }
 
 .MealItem .item-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: var(--status-icon-size);
 }
 
 .MealItem .item-title {
-    font-weight: 700;
-    color: var(--accent);
+    font-family: var(--font-display);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text);
 }
 
+/* Ghost button in the danger color; negative margins keep the 44px target without a taller header */
 .MealItem .btn-remove {
-    background: none;
-    color: var(--danger);
-    padding: 4px 8px;
-    font-size: 0.85rem;
+    margin-block: calc(-1 * var(--space-3));
+    margin-inline-end: calc(-1 * var(--space-2));
+    padding-inline: var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+    color: var(--color-danger);
 }
 
-.MealItem .btn-remove:hover:not(:disabled) {
-    text-decoration: underline;
+@media (hover: hover) {
+    .MealItem .btn-remove:hover:not(:disabled) {
+        background: var(--color-danger-soft);
+        color: var(--color-danger-hover);
+    }
 }
 
-.MealItem .field label {
-    font-size: 0.85rem;
-}
-
+/* "Loading stats..." while a picked food's stats are fetched: */
 .MealItem .filling {
-    margin-left: 8px;
-    font-weight: 400;
-    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    margin-inline-start: var(--space-2);
+    color: var(--color-accent);
 }
 
-/* Food search dropdown */
+.MealItem .filling::before {
+    content: "";
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    background: currentColor;
+    animation: meal-item-pulse var(--duration-shimmer) ease-in-out infinite;
+}
+
+/* ---------- Food search combobox ---------- */
+
 .MealItem .combo {
     position: relative;
 }
 
 .MealItem .suggestions {
     position: absolute;
-    top: calc(100% + 4px);
+    top: calc(100% + var(--space-1));
     left: 0;
     right: 0;
-    z-index: 10;
+    z-index: var(--z-dropdown);
     margin: 0;
-    padding: 4px;
+    padding: var(--space-1);
     list-style: none;
-    max-height: 260px;
+    max-height: var(--dropdown-max-height);
     overflow-y: auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    background: var(--color-surface-raised);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-overlay);
 }
 
 .MealItem .suggestions li {
-    padding: 8px 10px;
-    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    min-height: var(--touch-target);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-xs);
     cursor: pointer;
+    overflow-wrap: anywhere;
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        box-shadow var(--duration-fast) var(--ease-out);
 }
 
-.MealItem .suggestions li:hover,
+@media (hover: hover) {
+    .MealItem .suggestions li:hover {
+        background: var(--color-accent-soft);
+    }
+}
+
+/* Keyboard-selected option - accent rail + tint: */
 .MealItem .suggestions li.active {
-    background: var(--accent-soft);
+    background: var(--color-accent-soft);
+    box-shadow: inset var(--bracket-width) 0 0 var(--color-accent);
+    color: var(--color-accent-hover);
 }
 
 .MealItem .suggestions.status {
-    padding: 10px 12px;
-    color: var(--text-muted);
-    font-size: 0.85rem;
+    padding: var(--space-3);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+    overflow: hidden;
 }
+
+/* Searching - a scan line runs along the panel's top edge: */
+.MealItem .suggestions.status[aria-busy="true"]::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: var(--border-width-strong);
+    background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+    animation: meal-item-scan var(--duration-shimmer) linear infinite;
+}
+
+/* ---------- Numbers ---------- */
 
 .MealItem .number-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(var(--field-min), 1fr));
+    gap: var(--space-3);
+    align-items: end;
 }
 
-.MealItem .unit {
-    font-weight: 400;
-    color: var(--text-muted);
+/* Signal square before each number label - the macro's color, neutral for the rest: */
+.MealItem .number-grid label::before {
+    content: "";
+    display: inline-block;
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    margin-inline-end: var(--space-2);
+    vertical-align: middle;
+    background: var(--field-tone, var(--color-neutral-line));
+}
+
+.MealItem .field[data-field="calories"] {
+    --field-tone: var(--color-calories);
+}
+
+.MealItem .field[data-field="protien"] {
+    --field-tone: var(--color-protein);
+}
+
+.MealItem .field[data-field="carbs"] {
+    --field-tone: var(--color-carbs);
+}
+
+.MealItem .field[data-field="fats"] {
+    --field-tone: var(--color-fat);
+}
+
+/* "PROTEIN · G": */
+.MealItem .unit::before {
+    content: "· ";
 }
 
 .MealItem .optional {
     display: block;
-    font-weight: 400;
-    font-size: 0.75rem;
-    color: var(--text-muted);
+    margin-top: var(--space-1);
+    color: var(--color-text-muted);
+    font-weight: var(--weight-medium);
 }
 
+/* Stats follow the weight - an accent square marks it: */
 .MealItem .scale-hint {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
     margin: 0;
-    color: var(--text-muted);
-    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-size: var(--text-xs);
+    line-height: var(--leading-snug);
+}
+
+.MealItem .scale-hint::before {
+    content: "";
+    flex-shrink: 0;
+    width: var(--chip-dot-size);
+    height: var(--chip-dot-size);
+    background: var(--color-accent);
+}
+
+@keyframes meal-item-pulse {
+    50% {
+        opacity: var(--opacity-off);
+    }
+}
+
+@keyframes meal-item-scan {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(250%);
+    }
 }

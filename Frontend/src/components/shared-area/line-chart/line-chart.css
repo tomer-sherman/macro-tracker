@@ -1,0 +1,221 @@
+.LineChart {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    min-width: 0;
+}
+
+/* ---------- Legend (2+ series): line-key + marker shape + name in text color ---------- */
+
+.LineChart .chart-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.LineChart .chart-legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.LineChart .legend-key {
+    width: calc(var(--chart-key-width) + var(--space-1));
+    height: var(--space-3);
+    overflow: visible;
+}
+
+.LineChart .legend-key line {
+    stroke: var(--tone);
+    stroke-width: var(--chart-line-width);
+}
+
+.LineChart .legend-key path {
+    fill: var(--tone);
+    stroke: var(--color-surface);
+    stroke-width: var(--border-width-strong);
+    paint-order: stroke;
+}
+
+.LineChart .chart-unit {
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+}
+
+/* ---------- Plot ---------- */
+
+.LineChart .chart-plot {
+    position: relative;
+    height: var(--chart-height);
+    border-radius: var(--radius-sm);
+    /* Horizontal drags scrub the chart, vertical ones still scroll the page: */
+    touch-action: pan-y;
+    cursor: crosshair;
+}
+
+.LineChart svg {
+    display: block;
+    overflow: visible;
+}
+
+/* Grid + axes - solid hairlines, recessive */
+.LineChart .chart-grid line {
+    stroke: var(--color-divider);
+    stroke-width: var(--border-width);
+}
+
+.LineChart .chart-grid line.baseline {
+    stroke: var(--color-border-strong);
+}
+
+.LineChart .chart-grid text,
+.LineChart .chart-x-labels text {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    font-variant-numeric: tabular-nums;
+    fill: var(--color-text-muted);
+}
+
+.LineChart .chart-grid text {
+    text-anchor: end;
+    dominant-baseline: middle;
+}
+
+.LineChart .chart-x-labels text {
+    text-anchor: middle;
+}
+
+.LineChart .chart-x-labels text.active {
+    fill: var(--color-text);
+}
+
+.LineChart .chart-crosshair {
+    stroke: var(--color-border-strong);
+    stroke-width: var(--border-width);
+}
+
+/* Data - thin marks, the only loud thing on the chart */
+.LineChart .chart-line {
+    fill: none;
+    stroke: var(--tone);
+    stroke-width: var(--chart-line-width);
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+
+.LineChart .chart-area {
+    fill: var(--tone);
+    opacity: var(--chart-area-opacity);
+    stroke: none;
+}
+
+/* Markers carry a ring in the surface color, so they read where they cross a line: */
+.LineChart .chart-marker {
+    fill: var(--tone);
+    stroke: var(--color-surface);
+    stroke-width: calc(var(--border-width-strong) * 2);
+    paint-order: stroke;
+}
+
+/* The point under the crosshair = active, so it glows: */
+.LineChart .chart-marker.active {
+    filter: drop-shadow(0 0 var(--glow-blur-sm) var(--tone-glow));
+}
+
+.LineChart .chart-data {
+    animation: line-chart-in var(--duration-slow) var(--ease-out);
+}
+
+@keyframes line-chart-in {
+    from {
+        opacity: 0;
+        transform: translateY(var(--space-2));
+    }
+}
+
+/* ---------- Tooltip: values lead, names follow ---------- */
+
+.LineChart .chart-tooltip {
+    position: absolute;
+    top: 0;
+    z-index: var(--z-dropdown);
+    min-width: var(--chart-tooltip-min);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface-raised);
+    border: var(--border-width) solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-overlay);
+    pointer-events: none;
+}
+
+.LineChart .tooltip-title {
+    margin: 0 0 var(--space-2);
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: var(--weight-semibold);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+}
+
+.LineChart .chart-tooltip ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.LineChart .chart-tooltip li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    white-space: nowrap;
+}
+
+/* A short stroke of the series color, not a box: */
+.LineChart .tooltip-key {
+    align-self: center;
+    flex-shrink: 0;
+    width: var(--chart-key-width);
+    height: var(--chart-line-width);
+    background: var(--tone);
+}
+
+.LineChart .chart-tooltip strong {
+    font-size: var(--text-md);
+    font-weight: var(--weight-semibold);
+    color: var(--color-text);
+}
+
+.LineChart .tooltip-unit {
+    font-family: var(--font-mono);
+    font-size: var(--text-2xs);
+    color: var(--color-text-muted);
+}
+
+.LineChart .tooltip-label {
+    margin-inline-start: auto;
+    padding-inline-start: var(--space-3);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
+
+.LineChart .tooltip-note {
+    margin: var(--space-2) 0 0;
+    padding-top: var(--space-2);
+    border-top: var(--border-width) solid var(--color-divider);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+}
