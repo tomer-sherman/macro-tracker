@@ -14,7 +14,8 @@ export interface IMealModel extends Document {
     sugars: number | null;
     grams: number;
     desc: string,
-    
+    userId: Types.ObjectId;
+
 }
 
 
@@ -70,8 +71,13 @@ export const MealSchema = new Schema<IMealModel>({
         minLength: [5, "Description cannot be less than 5 chars."],
         maxLength: [300, "Description cannot be more than 300 chars."],
         lowercase: true
+    },
+    userId: {
+        type: Schema.Types.ObjectId,
+        required: [true, "User id is required to add a meal log."],
+        ref: "UserModel",
     }
-   
+
 }, {
     versionKey: false,
     id: false,

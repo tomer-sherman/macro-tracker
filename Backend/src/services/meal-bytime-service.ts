@@ -2,6 +2,7 @@ import { DateTime, IANAZone } from "luxon";
 import { IMealModel, MealModel } from "../models/meal-log-model";
 import { ClientError } from "../utils/error-handeling/client-error";
 import { StatusCode } from "../utils/error-handeling/enums";
+import { Types } from "mongoose";
 
 type DATE_RANGE = {
     start: Date;
@@ -17,20 +18,20 @@ type SortOrder = 1 | -1 | "asc" | "desc";
 
 class MealByTimeService {
 
-    public async getMealsByDateRange(timezone: string, startDate: string, endDate?: string, order?: string): Promise<IMealModel[]> {
+    public async getMealsByDateRange(timezone: string, startDate: string, userId: string, endDate?: string, order?: string): Promise<IMealModel[]> {
 
         const sortOrder = this.validateOrder(order);
         const { start, end } = this.convertDateToUTC(timezone, startDate, endDate);
 
         const meals = await MealModel.
-            find({ createdAt: { $gte: start, $lt: end } })
+            find({ createdAt: { $gte: start, $lt: end }, userId: { $eq: userId } })
             .sort({ createdAt: sortOrder, calories: 1 }).exec();
 
         return meals;
 
     }
 
-    public async getStatsByRange(timezone: string, startDate: string, endDate?: string): Promise<object> {
+    public async getStatsByRange(timezone: string, startDate: string, userId: string, endDate?: string): Promise<object> {
 
         const { start, end } = this.convertDateToUTC(timezone, startDate, endDate);
         const rangeLabel = endDate ? `${startDate} / ${endDate}` : startDate;
@@ -40,7 +41,7 @@ class MealByTimeService {
 
 
         const results = await MealModel.aggregate([
-            { $match: { createdAt: { $gte: start, $lte: end } } },
+            { $match: { createdAt: { $gte: start, $lte: end }, userId: { $eq: new Types.ObjectId(userId) } } },
             {
                 $group: {
                     _id: {

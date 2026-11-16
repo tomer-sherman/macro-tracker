@@ -23,8 +23,9 @@ class MealByTimeController {
     private async getMealsByRange(request: Request, response: Response): Promise<void> {
 
         const { timeZone, startDate, endDate, order } = request.query as RequestQueries;
+        const userId = request.userId!;
 
-        const meals = await mealbytimeService.getMealsByDateRange(timeZone, startDate, endDate, order);
+        const meals = await mealbytimeService.getMealsByDateRange(timeZone, startDate, userId, endDate, order);
         response.json(meals);
 
     }
@@ -32,7 +33,8 @@ class MealByTimeController {
     private async getStatsByRange(request: Request, response: Response): Promise<void> {
 
         const { timeZone, startDate, endDate } = request.query as RequestQueries;
-        const stats = await mealbytimeService.getStatsByRange(timeZone, startDate, endDate);
+        const userId = request.userId!;
+        const stats = await mealbytimeService.getStatsByRange(timeZone, startDate, userId ,endDate);
 
         response.json(stats);
 

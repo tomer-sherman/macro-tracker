@@ -3,6 +3,8 @@ import { hash, verify } from "argon2";
 import { appConfig } from "../app-config";
 import { jwtVerify, SignJWT } from "jose";
 import { IUserModel } from "../../models/user-model";
+import { ClientError } from "../error-handeling/client-error";
+import { StatusCode } from "../error-handeling/enums";
 
 type UserPayload = {
     userId: string,
@@ -38,13 +40,13 @@ class Security {
         return jwt;
     }
 
-    public async verifyToken(token: string): Promise<boolean> {
+    public async verifyToken(token: string): Promise<UserPayload> {
         try {
-            await jwtVerify<UserPayload>(token, this.jwtSecret);
-            return true
-        }
-        catch (err: any) {
-            return false
+            const user = (await jwtVerify<UserPayload>(token, this.jwtSecret)).payload;
+            return user;
+            
+        } catch (err: any) {
+            throw new ClientError(StatusCode.Unauthorized, "You are not logged in.")
         }
     }
 

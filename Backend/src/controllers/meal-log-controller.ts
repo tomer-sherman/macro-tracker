@@ -19,7 +19,7 @@ class MealController {
         this.router.put("/api/meals/:id", this.updateMeal);
     }
 
-   
+
     private async getAllMeals(request: Request, response: Response): Promise<void> {
         const meals = await mealService.getAllMeals();
         response.json(meals);
@@ -33,7 +33,8 @@ class MealController {
     }
 
     private async addMeal(request: Request, respose: Response): Promise<void> {
-
+        // Extract the userId from the request instance, and place it in the body
+        request.body.userId = request.userId;
         const meal = new MealModel(request.body);
         const dbMeal = await mealService.addMeal(meal);
         respose.status(StatusCode.Created).json(dbMeal);
