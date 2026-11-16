@@ -1,18 +1,22 @@
 import { createRoot } from 'react-dom/client'
+import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import { Layout } from './components/layout-area/layout/layout'
+import { store } from './redux/store'
 import './index.css'
 import { interceptor } from './utils/interceptor'
 
-// Create interceptor: 
+// Create interceptor:
 interceptor.create();
 
 createRoot(document.getElementById('root')!).render(
 
-    <BrowserRouter>
+    <Provider store={store}>
+        <BrowserRouter>
 
-        <Layout />
+            <Layout />
 
-    </BrowserRouter>
+        </BrowserRouter>
+    </Provider>
 
 )

@@ -1,0 +1,44 @@
+.LogMeal h3 {
+    margin: 0 0 16px;
+}
+
+.LogMeal .ai-form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.LogMeal .ai-form label {
+    margin-bottom: 0;
+}
+
+.LogMeal .ai-form textarea {
+    resize: vertical;
+}
+
+.LogMeal .ai-form button {
+    align-self: flex-start;
+}
+
+.LogMeal .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 22px 0 16px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.LogMeal .divider::before,
+.LogMeal .divider::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--border);
+}
+
+.LogMeal .actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}

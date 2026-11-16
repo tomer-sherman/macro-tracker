@@ -52,19 +52,21 @@ class MealService {
 
         const id = meal._id;
         // Handles bad id in the params
-        if(!mongoose.isValidObjectId(id)) throw new ClientError(StatusCode.BadRequest, `Bad request id: ${id} not valid.` );
-       
+        if (!mongoose.isValidObjectId(id)) throw new ClientError(StatusCode.BadRequest, `Bad request id: ${id} not valid.`);
+
         // Handles validation errors
         await MealModel.validate(meal);
 
-        // Handeles not found
-        await this.getOneMeal(id.toString());
-        console.log("Not found passed!");
+        // Handeles not found NOT ACTUALLY NECECERY specifically for the update func,
+        // In mongo if you update a non existing id then it simply returns null, so simply use the null To make sure, that it cannot be not found.
+        // await this.getOneMeal(id.toString());
+        // console.log("Not found passed!");
 
         const dbMeal = await MealModel.findByIdAndUpdate(id, meal, { returnDocument: "after" }).exec();
+        if (!dbMeal) throw new ClientError(StatusCode.NotFound, `Id ${id} not found...`)
 
         // Since get one already handles not found, then i simply shut up ts here
-        return dbMeal!;
+        return dbMeal;
 
     }
 

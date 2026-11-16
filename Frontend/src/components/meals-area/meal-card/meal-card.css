@@ -1,0 +1,91 @@
+.MealCard {
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+}
+
+.MealCard .meal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.MealCard .desc {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+/* The backend stores desc in lowercase - capitalize the first letter for display: */
+.MealCard .desc::first-letter {
+    text-transform: uppercase;
+}
+
+.MealCard .grams {
+    margin-left: 8px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.MealCard .meal-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.MealCard .btn-delete {
+    background: none;
+    color: var(--danger);
+    padding: 2px 6px;
+    font-size: 0.85rem;
+}
+
+.MealCard .btn-delete:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+.MealCard time {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 999px;
+    padding: 2px 10px;
+}
+
+/* Meal name inside the remove modal (rendered in a portal, so it's outside .MealCard): */
+.ConfirmModal .modal-meal-name {
+    display: inline-block;
+    color: var(--text);
+}
+
+.ConfirmModal .modal-meal-name::first-letter {
+    text-transform: uppercase;
+}
+
+.MealCard .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 8px;
+    margin: 12px 0 0;
+}
+
+.MealCard dt {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.MealCard dd {
+    margin: 0;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.MealCard .unit {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}

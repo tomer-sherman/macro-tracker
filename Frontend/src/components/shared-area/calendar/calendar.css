@@ -1,0 +1,129 @@
+.Calendar {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 380px;
+    margin: 0 auto;
+}
+
+.Calendar .calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.Calendar .calendar-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.Calendar .nav-btn {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: none;
+    color: var(--text);
+    border-color: var(--border);
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.Calendar .nav-btn:hover:not(:disabled) {
+    background: var(--accent-soft);
+}
+
+.Calendar .weekdays,
+.Calendar .days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.Calendar .weekdays span {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Calendar .day {
+    position: relative;
+    aspect-ratio: 1;
+    padding: 0;
+    background: none;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.Calendar .day:hover:not(:disabled) {
+    background: var(--accent-soft);
+}
+
+.Calendar .day:focus-visible,
+.Calendar .nav-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.Calendar .day.today {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.Calendar .day.selected,
+.Calendar .day.selected:hover:not(:disabled) {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 700;
+}
+
+/* Future days: */
+.Calendar .day:disabled {
+    opacity: 0.3;
+}
+
+.Calendar .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.Calendar .day .dot {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.Calendar .day.selected .dot {
+    background: #fff;
+}
+
+.Calendar .calendar-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.Calendar .legend {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.Calendar .today-btn {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+}

@@ -5,7 +5,7 @@ export function Spinner() {
     return (
         <div className="Spinner">
 
-			<img src={loading} />
+			<img src={loading} alt="Loading..." />
 
         </div>
     );

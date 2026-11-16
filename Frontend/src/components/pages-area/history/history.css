@@ -1,0 +1,39 @@
+.History .page-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.History .page-title h2 {
+    margin: 0;
+}
+
+.History .page-title .hint {
+    color: var(--text-muted);
+}
+
+.History .sections {
+    display: grid;
+    grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.History .calendar-card {
+    padding: 20px;
+    /* Stays in view while scrolling a long list of meals: */
+    position: sticky;
+    top: 16px;
+}
+
+@media (max-width: 760px) {
+    .History .sections {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .History .calendar-card {
+        position: static;
+    }
+}

@@ -10,6 +10,7 @@ class FoodDataController {
     public constructor() {
         this.router.get("/api/food-data", this.searchFood);
         this.router.post("/api/ai-autofill", this.getAiEstimate)
+        this.router.post("/api/food-by-desc", this.getFoodByDesc)
     }
 
     // GET /api/food-data?query=apple
@@ -18,6 +19,15 @@ class FoodDataController {
         const query = request.query.query as string;
         const meals = await foodService.searchFood(query);
         response.json(meals);
+
+    }
+
+    private async getFoodByDesc(request: Request, response: Response): Promise<void> {
+
+        const desc = request.body.desc as string;
+        const meal = await foodService.getOneFoodByDesc(desc);
+
+        response.json(meal);
 
     }
 

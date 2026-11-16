@@ -1,0 +1,39 @@
+.MealList .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.MealList h3 {
+    margin: 0;
+}
+
+.MealList .count {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    padding: 1px 9px;
+}
+
+.MealList .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.MealList .empty p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.MealList ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}

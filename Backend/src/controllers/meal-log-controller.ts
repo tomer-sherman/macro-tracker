@@ -19,7 +19,7 @@ class MealController {
         this.router.put("/api/meals/:id", this.updateMeal);
     }
 
-    // Get : 
+   
     private async getAllMeals(request: Request, response: Response): Promise<void> {
         const meals = await mealService.getAllMeals();
         response.json(meals);

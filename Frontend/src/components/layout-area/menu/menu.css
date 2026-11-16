@@ -1,0 +1,24 @@
+.Menu {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.Menu a {
+    padding: 6px 12px;
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.Menu a:hover {
+    color: var(--text);
+    background: var(--accent-soft);
+}
+
+/* NavLink adds .active to the link of the current page: */
+.Menu a.active {
+    color: var(--accent);
+    background: var(--accent-soft);
+}

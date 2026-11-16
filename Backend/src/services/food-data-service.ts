@@ -42,7 +42,7 @@ class FoodService {
 
     }
 
-    private async getOneFoodByDesc(desc: string): Promise<IFoodModel> {
+    public async getOneFoodByDesc(desc: string): Promise<IFoodModel> {
 
         const food = await FoodModel.findOne({ nameEn: desc }).exec();
         if (!food) throw new ClientError(StatusCode.NotFound, `Food with ${desc} not found.`);

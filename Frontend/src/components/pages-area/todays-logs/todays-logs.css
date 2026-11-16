@@ -1,0 +1,28 @@
+.TodaysLogs .page-title {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.TodaysLogs .page-title h2 {
+    margin: 0;
+}
+
+.TodaysLogs .page-title .date {
+    color: var(--text-muted);
+}
+
+.TodaysLogs .sections {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 860px) {
+    .TodaysLogs .sections {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

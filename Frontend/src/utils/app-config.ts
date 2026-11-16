@@ -1,5 +1,13 @@
 class AppConfig {
-	public readonly dataUrl = "http://localhost:4000/api/____";
+
+    private readonly baseUrl = "http://localhost:4000/api/";
+
+    public readonly loginUrl = this.baseUrl + "login";
+    public readonly mealsUrl = this.baseUrl + "meals";
+    public readonly mealsByDateRangeUrl = this.baseUrl + "meals-by-date-range";
+    public readonly aiAutofillUrl = this.baseUrl + "ai-autofill";
+    public readonly foodDataUrl = this.baseUrl + "food-data";
+    public readonly foodByDescUrl = this.baseUrl + "food-by-desc";
 
     public readonly recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
 }

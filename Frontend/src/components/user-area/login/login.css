@@ -1,0 +1,30 @@
+.Login {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 8vh;
+}
+
+.Login .card {
+    width: 100%;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+}
+
+.Login h2 {
+    margin: 0;
+}
+
+.Login .subtitle {
+    margin: 6px 0 22px;
+    color: var(--text-muted);
+}
+
+.Login label {
+    margin-top: 12px;
+}
+
+.Login .btn-primary {
+    margin-top: 24px;
+}
