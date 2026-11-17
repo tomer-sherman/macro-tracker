@@ -1,7 +1,6 @@
-
 import { hash, verify } from "argon2";
+import jwt from "jsonwebtoken";
 import { appConfig } from "../app-config";
-import { jwtVerify, SignJWT } from "jose";
 import { IUserModel } from "../../models/user-model";
 import { ClientError } from "../error-handeling/client-error";
 import { StatusCode } from "../error-handeling/enums";
@@ -13,7 +12,7 @@ type UserPayload = {
 
 class Security {
 
-    private jwtSecret = new TextEncoder().encode(appConfig.jwtSecret);
+    private jwtSecret = appConfig.jwtSecret;
 
     public async hashPassword(password: string): Promise<string> {
         const hashedPass = await hash(password);
@@ -31,20 +30,15 @@ class Security {
             username: user.username
         }
 
-        const jwt = new SignJWT(payload)
-            .setProtectedHeader({ alg: "HS256" })
-            .setIssuedAt()
-            .setExpirationTime("1h")
-            .sign(this.jwtSecret)
-
-        return jwt;
+        const token = jwt.sign(payload, this.jwtSecret, { algorithm: "HS256", expiresIn: "1h" });
+        return token;
     }
 
     public async verifyToken(token: string): Promise<UserPayload> {
         try {
-            const user = (await jwtVerify<UserPayload>(token, this.jwtSecret)).payload;
+            const user = jwt.verify(token, this.jwtSecret, { algorithms: ["HS256"] }) as UserPayload;
             return user;
-            
+
         } catch (err: any) {
             throw new ClientError(StatusCode.Unauthorized, "You are not logged in.")
         }
