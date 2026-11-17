@@ -3,6 +3,7 @@ import { StatusCode } from "../utils/error-handeling/enums";
 import { ClientError } from "../utils/error-handeling/client-error";
 import colors from "colors";
 import { Error } from "mongoose";
+import { appConfig } from "../utils/app-config";
 
 
 
@@ -18,18 +19,16 @@ class ErrorMiddleware {
     public catchAll = (err: any, request: Request, response: Response, next: NextFunction): void => {
 
         // Check for mongoose validation error:
-        if (err instanceof Error.ValidationError){this.mongooseValidationError(err, response); return;}
+        if (err instanceof Error.ValidationError) { this.mongooseValidationError(err, response); return; }
 
         // Take status
         const status = err.status || StatusCode.InternalServerError;
 
         // Take message: 
-        const message = err.message;
+        const message = appConfig.isProd ? "Some error pls try again later.." : err.message;
 
         // Console message: 
         console.log(colors.red(err.message));
-
-        
 
         // Return back error:
         response.status(status).json({ message });

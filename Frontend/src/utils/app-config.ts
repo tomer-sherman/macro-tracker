@@ -1,6 +1,6 @@
 class AppConfig {
 
-    private readonly baseUrl = "http://localhost:4000/api/";
+    private readonly baseUrl = import.meta.env.VITE_API_URL! as string;
 
     public readonly loginUrl = this.baseUrl + "login";
     public readonly mealsUrl = this.baseUrl + "meals";

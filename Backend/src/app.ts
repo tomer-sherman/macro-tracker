@@ -10,6 +10,7 @@ import { authMiddleWare } from "./middleware/auth-middleware";
 import { loginController } from "./controllers/login-controller";
 import { loggerMiddleware } from "./middleware/logger-middleware";
 import { foodDataController } from "./controllers/food-data-controller";
+import { securityMiddleware } from "./middleware/security-middleware";
 
 class App {
 
@@ -20,9 +21,16 @@ class App {
         // Create our server object:
         const server = express();
 
+        // Security middleware
+        securityMiddleware.registerHeaderAndRateLimit(server);
+
         // System middleware:
-        server.use(cors()); // Enable CORS.
+        server.use(cors({ origin: appConfig.clientUrl })); // Enable CORS.
         server.use(express.json()); // Configure express to create request.body from a given JSON.
+
+        // More security:
+        server.use(securityMiddleware.preventXss)
+
 
         // Log requests
         server.use(loggerMiddleware.logToConsole);
