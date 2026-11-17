@@ -5,7 +5,6 @@ class AppConfig {
     public readonly loginUrl = this.baseUrl + "login";
     public readonly mealsUrl = this.baseUrl + "meals";
     public readonly mealsByDateRangeUrl = this.baseUrl + "meals-by-date-range";
-    public readonly mealsStatsByRangeUrl = this.baseUrl + "meals-stats-by-range";
     public readonly aiAutofillUrl = this.baseUrl + "ai-autofill";
     public readonly foodDataUrl = this.baseUrl + "food-data";
     public readonly foodByDescUrl = this.baseUrl + "food-by-desc";

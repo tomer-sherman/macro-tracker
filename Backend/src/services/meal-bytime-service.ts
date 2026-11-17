@@ -22,6 +22,7 @@ class MealByTimeService {
 
         const sortOrder = this.validateOrder(order);
         const { start, end } = this.convertDateToUTC(timezone, startDate, endDate);
+        this.validateDateRange(startDate, endDate);
 
         const meals = await MealModel.
             find({ createdAt: { $gte: start, $lt: end }, userId: { $eq: userId } })
@@ -31,106 +32,19 @@ class MealByTimeService {
 
     }
 
-    public async getStatsByRange(timezone: string, startDate: string, userId: string, endDate?: string): Promise<object> {
 
-        const { start, end } = this.convertDateToUTC(timezone, startDate, endDate);
-        const rangeLabel = endDate ? `${startDate} / ${endDate}` : startDate;
-
-        // Days in range, inclusive (14 → 30 = 17 days)
-        const totalDays = this.countDaysInRange(startDate, endDate);
-
-
-        const results = await MealModel.aggregate([
-            { $match: { createdAt: { $gte: start, $lte: end }, userId: { $eq: new Types.ObjectId(userId) } } },
-            {
-                $group: {
-                    _id: {
-                        $dateToString: {
-                            format: "%Y-%m-%d",
-                            date: "$createdAt",
-                            timezone: timezone
-                        }
-                    },
-                    sumCalories: { $sum: "$calories" },
-                    sumProtein: { $sum: "$protien" },
-                    sumCarbs: { $sum: "$carbs" },
-                    sumFats: { $sum: "$fats" },
-                    sumSugars: { $sum: "$sugars" },
-
-                }
-            },
-            { $sort: { _id: 1 } }, // So logs come out in date order
-            {
-                $group: {
-                    _id: rangeLabel, // Must be named _id
-                    totalCalories: { $sum: "$sumCalories" },
-                    totalProtein: { $sum: "$sumProtein" },
-                    totalCarbs: { $sum: "$sumCarbs" },
-                    totalFats: { $sum: "$sumFats" },
-                    totalSugars: { $sum: "$sumSugars" },
-                    daysLogged: { $sum: 1 }, // Tracks how many days had meals
-                    // One object per logged day
-                    logs: {
-                        $push: {
-                            date: "$_id",
-                            calories: { $round: ["$sumCalories", 2] },
-                            protein: { $round: ["$sumProtein", 2] },
-                            carbs: { $round: ["$sumCarbs", 2] },
-                            fats: { $round: ["$sumFats", 2] },
-                            sugars: { $round: ["$sumSugars", 2] }
-                        }
-                    }
-                }
-            },
-            {
-                // Divide by days in range, not days logged
-                $project: {
-                    avgCalories: { $divide: ["$totalCalories", totalDays] },
-                    avgProtein: { $divide: ["$totalProtein", totalDays] },
-                    avgCarbs: { $divide: ["$totalCarbs", totalDays] },
-                    avgFats: { $divide: ["$totalFats", totalDays] },
-                    avgSugars: { $divide: ["$totalSugars", totalDays] },
-                    daysLogged: 1,
-                    totalDays: { $literal: totalDays },
-                    logs: 1
-                }
-            }
-        ]);
-
-        // If raw does not return anything
-        const raw = results[0];
-        if (!raw) {
-            return {
-                _id: rangeLabel,
-                avgCalories: 0,
-                avgProtein: 0,
-                avgCarbs: 0,
-                avgFats: 0,
-                avgSugars: 0,
-                daysLogged: 0,
-                totalDays,
-                logs: []
-            };
-        }
-
-        // For each field round too 2 decimals
-        const stats = Object.fromEntries
-            (Object.entries(raw)
-                .map(enrty => [enrty[0],
-                typeof enrty[1] !== "number" ?
-                    enrty[1] : Math.round(enrty[1] * 100) / 100]));
-
-        return stats;
-
-    }
-
-    private countDaysInRange(startDate: string, endDate?: string): number {
+    private validateDateRange(startDate: string, endDate?: string): number {
         if (!endDate) return 1;
 
         const msPerDay = 1000 * 60 * 60 * 24;
-        const diff = new Date(endDate).getTime() - new Date(startDate).getTime();
+        const msDiff = new Date(endDate).getTime() - new Date(startDate).getTime();
 
-        return Math.round(diff / msPerDay) + 1; // +1 so the end day counts
+        if (msDiff < 0) throw new ClientError(StatusCode.UnprocessableContent, "statDate cannot be after endDate")
+
+        const dayDiff = Math.round(msDiff / msPerDay) + 1;
+        if (dayDiff > 369) throw new ClientError(StatusCode.UnprocessableContent, "You cannot request more then 369 days")
+
+        return dayDiff // +1 so the end day counts
     }
 
     private validateOrder(order: string | number | undefined): SortOrder {

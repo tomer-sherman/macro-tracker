@@ -1,6 +1,5 @@
 import axios from "axios";
 import { MealModel } from "../models/meal-model";
-import { MealStatsModel } from "../models/meal-stats-model";
 import { mealsActions } from "../redux/meals-slice";
 import { store } from "../redux/store";
 import { appConfig } from "../utils/app-config";
@@ -8,31 +7,15 @@ import { dateUtil } from "../utils/date-util";
 
 class MealService {
 
-    // GET /api/meals-by-date-range, oldest first, in the browser's time zone.
+    // GET /api/meals-by-date-range, oldest first, in the browser's time zone (the signal cancels a stale request).
     // startDate is included, endDate is not. Without endDate the backend returns just startDate's day.
-    public async getMealsByDateRange(startDate: string, endDate?: string): Promise<MealModel[]> {
+    public async getMealsByDateRange(startDate: string, endDate?: string, signal?: AbortSignal): Promise<MealModel[]> {
         const response = await axios.get<MealModel[]>(appConfig.mealsByDateRangeUrl, {
             params: {
                 timeZone: dateUtil.timeZone(),
                 startDate,
                 endDate, // axios leaves out undefined params.
                 order: "asc"
-            }
-        });
-        return response.data;
-    }
-
-    // GET /api/meals-stats-by-range - per-day totals (logged days only) from firstDay to lastDay, both included,
-    // in the browser's time zone (the signal cancels a stale request).
-    // The backend matches meals up to endDate's midnight, so endDate is sent as the day AFTER lastDay -
-    // otherwise lastDay's meals (e.g. today's) are left out. Its avg* / totalDays fields are off by that day,
-    // so averages are worked out from `logs` instead (see statsUtil).
-    public async getStatsByRange(firstDay: string, lastDay: string, signal?: AbortSignal): Promise<MealStatsModel> {
-        const response = await axios.get<MealStatsModel>(appConfig.mealsStatsByRangeUrl, {
-            params: {
-                timeZone: dateUtil.timeZone(),
-                startDate: firstDay,
-                endDate: dateUtil.addDays(lastDay, 1)
             },
             signal
         });

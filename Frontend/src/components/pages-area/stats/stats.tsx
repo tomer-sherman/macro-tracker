@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { MealStatsModel } from "../../../models/meal-stats-model";
+import { DayStatsModel } from "../../../models/meal-stats-model";
 import { mealService } from "../../../services/meal-service";
 import { dateUtil } from "../../../utils/date-util";
 import { notify } from "../../../utils/notify";
@@ -35,7 +35,7 @@ type LoadedStats = {
     range: StatsRange;
     firstDay: string;
     lastDay: string;
-    stats: MealStatsModel;
+    logs: DayStatsModel[]; // One entry per logged day, oldest first.
 };
 
 export function Stats() {
@@ -62,12 +62,13 @@ export function Stats() {
     const isLoading = loaded?.key !== requestKey && failedKey !== requestKey;
     const loadFailed = failedKey === requestKey;
 
-    // Fetch the selected range. Picking another range before it arrives cancels this request:
+    // Fetch the selected range's meals and total them per day. Picking another range before it arrives cancels this request.
+    // endDate isn't included, so ask up to tomorrow to get today's meals too:
     useEffect(() => {
         const controller = new AbortController();
 
-        mealService.getStatsByRange(firstDay, today, controller.signal)
-            .then(stats => setLoaded({ key: requestKey, range, firstDay, lastDay: today, stats }))
+        mealService.getMealsByDateRange(firstDay, dateUtil.addDays(today, 1), controller.signal)
+            .then(meals => setLoaded({ key: requestKey, range, firstDay, lastDay: today, logs: statsUtil.dailyTotals(meals) }))
             .catch((err: any) => {
                 if (axios.isCancel(err)) return;
                 notify.error(err);
@@ -80,8 +81,7 @@ export function Stats() {
     // The loaded days -> chart points + range averages:
     const view = useMemo(() => {
         if (!loaded) return null;
-        const { range, firstDay, lastDay, stats } = loaded;
-        const logs = stats.logs.filter(log => log.date >= firstDay && log.date <= lastDay);
+        const { range, firstDay, lastDay, logs } = loaded;
         const buckets = statsUtil.buckets(range, firstDay, lastDay, logs);
         return {
             range,

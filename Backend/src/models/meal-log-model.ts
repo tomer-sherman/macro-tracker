@@ -15,6 +15,7 @@ export interface IMealModel extends Document {
     grams: number;
     desc: string,
     userId: Types.ObjectId;
+    createdAt: Date;
 
 }
 

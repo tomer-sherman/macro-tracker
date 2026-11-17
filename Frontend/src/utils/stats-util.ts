@@ -1,7 +1,8 @@
+import { MealModel } from "../models/meal-model";
 import { DayStatsModel } from "../models/meal-stats-model";
 import { dateUtil } from "./date-util";
 
-export type StatsRange = "1w" | "2w" | "1m" | "6m" | "1y";
+export type StatsRange = "3d" | "1w" | "2w" | "1m" | "6m" | "1y";
 export type StatsGranularity = "day" | "week" | "month";
 
 type RangeInfo = {
@@ -19,7 +20,7 @@ type DaySpan = {
 export type StatsBucket = DaySpan & {
     days: number;       // Days in the span (cut to the range - the oldest week / current month can be shorter).
     daysLogged: number; // Days in the span that have meals.
-    // Average per day over ALL the span's days - a day with no meals counts as 0, like the backend's averages.
+    // Average per day over ALL the span's days - a day with no meals counts as 0.
     // null = nothing logged in the span, drawn as a gap (not a 0):
     calories: number | null;
     protein: number | null;
@@ -34,6 +35,7 @@ const statKeys: StatKey[] = ["calories", "protein", "carbs", "fats", "sugars"];
 class StatsUtil {
 
     public readonly ranges: Record<StatsRange, RangeInfo> = {
+        "3d": { label: "3D", name: "3 days", granularity: "day" },
         "1w": { label: "1W", name: "1 week", granularity: "day" },
         "2w": { label: "2W", name: "2 weeks", granularity: "day" },
         "1m": { label: "1M", name: "1 month", granularity: "week" },
@@ -51,12 +53,32 @@ class StatsUtil {
     public firstDay(range: StatsRange, lastDay: string): string {
         const thisMonth = dateUtil.toMonthKey(lastDay);
         switch (range) {
+            case "3d": return dateUtil.addDays(lastDay, -2);
             case "1w": return dateUtil.addDays(lastDay, -6);
             case "2w": return dateUtil.addDays(lastDay, -13);
             case "1m": return dateUtil.addDays(dateUtil.shiftMonths(lastDay, -1), 1); // Nov 16 -> from Oct 17.
             case "6m": return `${dateUtil.addMonths(thisMonth, -5)}-01`;  // Whole months: this one + the 5 before it.
             case "1y": return `${dateUtil.addMonths(thisMonth, -11)}-01`; // This month + the 11 before it.
         }
+    }
+
+    // Meals -> one entry per logged day with that day's totals, oldest first (the meals arrive oldest first).
+    // A meal's day is its local date in the browser's time zone - the same zone the meals were requested in:
+    public dailyTotals(meals: MealModel[]): DayStatsModel[] {
+        const byDay = meals.reduce((acc, meal) => {
+            const date = dateUtil.toDateKey(new Date(meal.createdAt!)); // Saved meals always have createdAt.
+
+            acc[date] ??= { date, calories: 0, protein: 0, carbs: 0, fats: 0, sugars: 0 }; // First meal of that day.
+            acc[date].calories += meal.calories;
+            acc[date].protein += meal.protien;
+            acc[date].carbs += meal.carbs;
+            acc[date].fats += meal.fats;
+            acc[date].sugars += meal.sugars ?? 0;
+
+            return acc;
+        }, {} as Record<string, DayStatsModel>);
+
+        return Object.values(byDay);
     }
 
     // One bucket per chart point - a day, a week (counted back from lastDay) or a calendar month:
@@ -78,7 +100,7 @@ class StatsUtil {
     // X-axis label of a bucket, e.g. "Mon", "Nov 10", "Nov":
     public axisLabel(bucket: StatsBucket, range: StatsRange): string {
         const start = dateUtil.fromDateKey(bucket.start);
-        if (range === "1w") return start.toLocaleDateString(undefined, { weekday: "short" });
+        if (range === "3d" || range === "1w") return start.toLocaleDateString(undefined, { weekday: "short" });
         if (this.ranges[range].granularity === "month") return start.toLocaleDateString(undefined, { month: "short" });
         return start.toLocaleDateString(undefined, { month: "short", day: "numeric" });
     }
