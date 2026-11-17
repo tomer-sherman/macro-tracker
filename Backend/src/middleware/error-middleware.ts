@@ -25,7 +25,9 @@ class ErrorMiddleware {
         const status = err.status || StatusCode.InternalServerError;
 
         // Take message: 
-        const message = appConfig.isProd ? "Some error pls try again later.." : err.message;
+        const message = appConfig.isProd && status >= 500
+            ? "Some error pls try again later.."
+            : err.message;
 
         // Console message: 
         console.log(colors.red(err.message));

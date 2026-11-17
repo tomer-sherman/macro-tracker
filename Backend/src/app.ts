@@ -18,6 +18,8 @@ class App {
 
     public start(): void {
 
+        this.server.set("trust proxy", 1);
+
         // Connect to MongoDB (mongoose buffers queries until connected):
         mongoose.connect(appConfig.mongoConnection)
             .then(() => console.log("Connected to MongoDB"))
