@@ -14,49 +14,53 @@ import { securityMiddleware } from "./middleware/security-middleware";
 
 class App {
 
-    public async start(): Promise<void> {
+    public readonly server = express();
 
-        await mongoose.connect(appConfig.mongoConnection)
+    public start(): void {
 
-        // Create our server object:
-        const server = express();
+        // Connect to MongoDB (mongoose buffers queries until connected):
+        mongoose.connect(appConfig.mongoConnection)
+            .then(() => console.log("Connected to MongoDB"))
+            .catch(err => console.error("MongoDB connection failed:", err));
 
         // Security middleware
-        securityMiddleware.registerHeaderAndRateLimit(server);
+        securityMiddleware.registerHeaderAndRateLimit(this.server);
 
         // System middleware:
-        server.use(cors({ origin: appConfig.clientUrl })); // Enable CORS.
-        server.use(express.json()); // Configure express to create request.body from a given JSON.
+        this.server.use(cors({ origin: appConfig.clientUrl }));
+        this.server.use(express.json());
 
         // More security:
-        server.use(securityMiddleware.preventXss)
-
+        this.server.use(securityMiddleware.preventXss);
 
         // Log requests
-        server.use(loggerMiddleware.logToConsole);
+        this.server.use(loggerMiddleware.logToConsole);
 
         // The only route who doesnt need a logged in user.
-        server.use(loginController.router);
+        this.server.use(loginController.router);
 
-        //Verify logged in:
-        server.use(authMiddleWare.verifyLoggedIn);
+        // Verify logged in:
+        this.server.use(authMiddleWare.verifyLoggedIn);
 
         // Register controllers:
-        server.use(mealController.router);
-        server.use(mealbytimeController.router);
-        server.use(foodDataController.router);
+        this.server.use(mealController.router);
+        this.server.use(mealbytimeController.router);
+        this.server.use(foodDataController.router);
 
         // Register "after" middleware:
-        server.use(errorMiddleware.routeNotFound);
-        server.use(errorMiddleware.catchAll);
+        this.server.use(errorMiddleware.routeNotFound);
+        this.server.use(errorMiddleware.catchAll);
 
-        // Run server:
-        server.listen(appConfig.port, () => console.log("Listening..."));
+        // Listen only locally, Vercel runs the server itself:
+        if (!process.env.VERCEL) {
+            this.server.listen(appConfig.port, () => console.log("Listening..."));
+        }
     }
-
 }
 
 const app = new App();
 app.start();
+
+export default app.server;
 
 // taskkill /F /IM node.exe
